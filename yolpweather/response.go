@@ -2,6 +2,8 @@ package yolpweather
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -51,10 +53,21 @@ const (
 type CoordinatesString string
 
 func (s CoordinatesString) Parse() (Coordinates, error) {
+	p := strings.SplitN(string(s), ",", 2)
+	if len(p) != 2 {
+		return Coordinates{}, fmt.Errorf("wants comma separated 2 values but %d", len(p))
+	}
+	lat, lon := p[1], p[0]
+
 	var c Coordinates
-	_, err := fmt.Sscanf("%f,%f", string(s), &c.Latitude, &c.Longitude)
+	var err error
+	c.Latitude, err = strconv.ParseFloat(lat, 64)
 	if err != nil {
-		return Coordinates{}, fmt.Errorf("could not parse coordinates %s: %s", s, err)
+		return Coordinates{}, fmt.Errorf("error while parsing latitude %s: %s", lat, err)
+	}
+	c.Longitude, err = strconv.ParseFloat(lon, 64)
+	if err != nil {
+		return Coordinates{}, fmt.Errorf("error while parsing longitude %s: %s", lon, err)
 	}
 	return c, nil
 }
