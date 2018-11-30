@@ -1,4 +1,4 @@
-# amefuriso
+# amefuriso [![CircleCI](https://circleci.com/gh/int128/amefuriso.svg?style=shield)](https://circleci.com/gh/int128/amefuriso)
 
 A command for showing rainfall forecast using [YOLP weather API](https://developer.yahoo.co.jp/webapi/map/openlocalplatform/v1/weather.html).
 
@@ -14,3 +14,9 @@ For example,
 2018/11/30 13:55:35 @{37.159185 138.2826}	forecast	14:35	0.00 mm
 2018/11/30 13:55:35 @{37.159185 138.2826}	forecast	14:45	0.00 mm
 ```
+
+## TODOs
+
+- [ ] Rainfall graph image
+- [ ] Forecast notification
+- [ ] Slack integration
