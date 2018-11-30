@@ -3,8 +3,11 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/int128/amefuriso/adapters"
 	"github.com/int128/amefuriso/yolpweather"
 	"log"
+	"math"
+	"strings"
 )
 
 type options struct {
@@ -19,24 +22,30 @@ func run(o options) error {
 			Latitude:  o.latitude,
 			Longitude: o.longitude,
 		}},
+		IntervalMinutes: 5,
+		PastHours:       1,
 	}
 	c := yolpweather.New(o.clientID)
 	resp, err := c.Get(&req)
 	if err != nil {
 		return fmt.Errorf("error while getting weather: %s", err)
 	}
-
-	for _, f := range resp.Payload.Feature {
-		coordinates, err := f.Geometry.Coordinates.Parse()
-		if err != nil {
-			log.Printf("Got invalid coordinates: %s", err)
+	weathers, err := adapters.Weathers(resp)
+	if err != nil {
+		return fmt.Errorf("error while parsing response: %s", err)
+	}
+	for _, weather := range weathers {
+		fmt.Printf("Weather at (%f, %f)\n", weather.Coordinates.Longitude, weather.Coordinates.Latitude)
+		for _, rainfall := range weather.RainfallObservation {
+			t := rainfall.Time.Format("15:04")
+			mark := strings.Repeat("🌧 ", int(math.Ceil(float64(rainfall.Amount))))
+			fmt.Printf("| %s | %5.2f mm/h | %s\n", t, rainfall.Amount, mark)
 		}
-		for _, w := range f.Property.WeatherList.Weather {
-			t, err := w.Date.Parse()
-			if err != nil {
-				log.Printf("Got invalid date: %s", err)
-			}
-			log.Printf("@%v\t%s\t%s\t%.2f mm", coordinates, w.Type, t.Format("15:04"), w.Rainfall)
+		fmt.Println("|-------|------------|---")
+		for _, rainfall := range weather.RainfallForecast {
+			t := rainfall.Time.Format("15:04")
+			mark := strings.Repeat("🌧 ", int(math.Ceil(float64(rainfall.Amount))))
+			fmt.Printf("| %s | %5.2f mm/h | %s\n", t, rainfall.Amount, mark)
 		}
 	}
 	return nil
