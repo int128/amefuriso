@@ -3,42 +3,41 @@ package adapters
 import (
 	"fmt"
 	"github.com/int128/amefuriso/domain"
-	"github.com/int128/amefuriso/yolpweather"
+	"github.com/int128/go-yahoo-weather/weather"
 )
 
-func Weathers(resp *yolpweather.Response) ([]domain.Weather, error) {
-	weathers := make([]domain.Weather, 0)
-	for _, f := range resp.Payload.Feature {
-		var weather domain.Weather
-		c, err := f.Geometry.Coordinates.Parse()
+func Weathers(resp *weather.Response) ([]domain.Weather, error) {
+	results := make([]domain.Weather, 0)
+	for _, respFeature := range resp.Body.Feature {
+		c, err := respFeature.Geometry.Coordinates.Parse()
 		if err != nil {
 			return nil, fmt.Errorf("invalid coordinates: %s", err)
 		}
-		weather.Coordinates = domain.Coordinates{
-			Latitude:  c.Latitude,
-			Longitude: c.Longitude,
+		result := domain.Weather{
+			Coordinates: domain.Coordinates{
+				Latitude:  c.Latitude,
+				Longitude: c.Longitude,
+			},
 		}
-
-		for _, w := range f.Property.WeatherList.Weather {
-			t, err := w.Date.Parse()
+		for _, respWeather := range respFeature.Property.WeatherList.Weather {
+			t, err := respWeather.Date.Parse()
 			if err != nil {
 				return nil, fmt.Errorf("invalid date: %s", err)
 			}
-			r := domain.Rainfall{
+			rainfall := domain.Rainfall{
 				Time:   t,
-				Amount: domain.RainfallMilliMeterPerHour(w.Rainfall),
+				Amount: domain.RainfallMilliMeterPerHour(respWeather.Rainfall),
 			}
-			switch w.Type {
-			case yolpweather.Observation:
-				weather.RainfallObservation = append(weather.RainfallObservation, r)
-			case yolpweather.Forecast:
-				weather.RainfallForecast = append(weather.RainfallForecast, r)
+			switch respWeather.Type {
+			case "observation":
+				result.RainfallObservation = append(result.RainfallObservation, rainfall)
+			case "forecast":
+				result.RainfallForecast = append(result.RainfallForecast, rainfall)
 			default:
-				return nil, fmt.Errorf("unknown weather type: %s", w.Type)
+				return nil, fmt.Errorf("unknown weather type: %s", respWeather.Type)
 			}
 		}
-
-		weathers = append(weathers, weather)
+		results = append(results, result)
 	}
-	return weathers, nil
+	return results, nil
 }

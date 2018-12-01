@@ -4,9 +4,10 @@ import (
 	"flag"
 	"fmt"
 	"github.com/int128/amefuriso/adapters"
-	"github.com/int128/amefuriso/yolpweather"
+	"github.com/int128/go-yahoo-weather/weather"
 	"log"
 	"math"
+	"os"
 	"strings"
 )
 
@@ -17,15 +18,15 @@ type options struct {
 }
 
 func run(o options) error {
-	req := yolpweather.Request{
-		Coordinates: []yolpweather.Coordinates{{
+	req := weather.Request{
+		Coordinates: []weather.Coordinates{{
 			Latitude:  o.latitude,
 			Longitude: o.longitude,
 		}},
 		IntervalMinutes: 5,
 		PastHours:       1,
 	}
-	c := yolpweather.New(o.clientID)
+	c := weather.NewClient(o.clientID)
 	resp, err := c.Get(&req)
 	if err != nil {
 		return fmt.Errorf("error while getting weather: %s", err)
@@ -34,15 +35,15 @@ func run(o options) error {
 	if err != nil {
 		return fmt.Errorf("error while parsing response: %s", err)
 	}
-	for _, weather := range weathers {
-		fmt.Printf("Weather at (%f, %f)\n", weather.Coordinates.Longitude, weather.Coordinates.Latitude)
-		for _, rainfall := range weather.RainfallObservation {
+	for _, w := range weathers {
+		fmt.Printf("Weather at (%f, %f)\n", w.Coordinates.Longitude, w.Coordinates.Latitude)
+		for _, rainfall := range w.RainfallObservation {
 			t := rainfall.Time.Format("15:04")
 			mark := strings.Repeat("🌧 ", int(math.Ceil(float64(rainfall.Amount))))
 			fmt.Printf("| %s | %5.2f mm/h | %s\n", t, rainfall.Amount, mark)
 		}
 		fmt.Println("|-------|------------|---")
-		for _, rainfall := range weather.RainfallForecast {
+		for _, rainfall := range w.RainfallForecast {
 			t := rainfall.Time.Format("15:04")
 			mark := strings.Repeat("🌧 ", int(math.Ceil(float64(rainfall.Amount))))
 			fmt.Printf("| %s | %5.2f mm/h | %s\n", t, rainfall.Amount, mark)
@@ -53,7 +54,7 @@ func run(o options) error {
 
 func main() {
 	var o options
-	flag.StringVar(&o.clientID, "client-id", "", "YOLP Client ID")
+	flag.StringVar(&o.clientID, "client-id", os.Getenv("YAHOO_CLIENT_ID"), "Yahoo API Client ID")
 	flag.Float64Var(&o.latitude, "lat", 35.663613, "Latitude")
 	flag.Float64Var(&o.longitude, "lon", 139.732293, "Longitude")
 	flag.Parse()
