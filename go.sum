@@ -1,2 +1,4 @@
 github.com/int128/go-yahoo-weather v1.0.0 h1:0wlESpL2HrADHIUyKaz8OfHKcVkrWx4XC/jsVFs7fOQ=
 github.com/int128/go-yahoo-weather v1.0.0/go.mod h1:i3gxWuA5Y4WzhHCpo8P4FCtkcf3ihytoCznQnLf7v9k=
+github.com/int128/go-yahoo-weather v1.0.1 h1:WkFOm2WtZX6nvey/dwvgbsRS+HoSk75ahe6yD2Ec4DQ=
+github.com/int128/go-yahoo-weather v1.0.1/go.mod h1:i3gxWuA5Y4WzhHCpo8P4FCtkcf3ihytoCznQnLf7v9k=

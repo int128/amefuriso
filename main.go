@@ -9,6 +9,7 @@ import (
 	"math"
 	"os"
 	"strings"
+	"time"
 )
 
 type options struct {
@@ -36,17 +37,16 @@ func run(o options) error {
 		return fmt.Errorf("error while parsing response: %s", err)
 	}
 	for _, w := range weathers {
-		fmt.Printf("Weather at (%f, %f)\n", w.Coordinates.Longitude, w.Coordinates.Latitude)
 		for _, rainfall := range w.RainfallObservation {
 			t := rainfall.Time.Format("15:04")
 			mark := strings.Repeat("🌧 ", int(math.Ceil(float64(rainfall.Amount))))
-			fmt.Printf("| %s | %5.2f mm/h | %s\n", t, rainfall.Amount, mark)
+			fmt.Printf("| %s |         | %5.2f mm/h | %s\n", t, rainfall.Amount, mark)
 		}
-		fmt.Println("|-------|------------|---")
 		for _, rainfall := range w.RainfallForecast {
 			t := rainfall.Time.Format("15:04")
+			d := -time.Since(rainfall.Time).Minutes()
 			mark := strings.Repeat("🌧 ", int(math.Ceil(float64(rainfall.Amount))))
-			fmt.Printf("| %s | %5.2f mm/h | %s\n", t, rainfall.Amount, mark)
+			fmt.Printf("| %s | %+3.0f min | %5.2f mm/h | %s\n", t, d, rainfall.Amount, mark)
 		}
 	}
 	return nil
