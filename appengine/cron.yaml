@@ -1,0 +1,4 @@
+cron:
+  - description:
+    url: /internal/poll-weather
+    schedule: every 5 minutes

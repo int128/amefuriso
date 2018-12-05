@@ -1,0 +1,12 @@
+runtime: go111
+
+handlers:
+  - url: /internal/.*
+    script: auto
+    login: admin
+
+  - url: /.*
+    script: auto
+
+includes:
+  - .env.yaml
