@@ -1,6 +1,6 @@
 package domain
 
-type Notification struct {
+type Message struct {
 	Text     string
 	ImageURL string
 }

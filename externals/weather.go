@@ -1,22 +1,49 @@
-package adapters
+package externals
 
 import (
 	"fmt"
+
 	"github.com/int128/amefuriso/domain"
 	"github.com/int128/go-yahoo-weather/weather"
+	"github.com/pkg/errors"
 )
 
-func Weathers(resp *weather.Response) ([]domain.Weather, error) {
+type WeatherService struct {
+	Client *weather.Client
+}
+
+func (s *WeatherService) Get(locations []domain.Location) ([]domain.Weather, error) {
+	req := weather.Request{
+		IntervalMinutes: 5,
+		PastHours:       1,
+	}
+	for _, location := range locations {
+		req.Coordinates = append(req.Coordinates, weather.Coordinates{
+			Latitude:  location.Coordinates.Latitude,
+			Longitude: location.Coordinates.Longitude,
+		})
+	}
+	resp, err := s.Client.Get(&req)
+	if err != nil {
+		return nil, errors.Wrapf(err, "error while getting weather")
+	}
+	return weatherAdaptor(resp, locations)
+}
+
+func weatherAdaptor(resp *weather.Response, locations []domain.Location) ([]domain.Weather, error) {
 	results := make([]domain.Weather, 0)
-	for _, respFeature := range resp.Body.Feature {
+	for i, respFeature := range resp.Body.Feature {
 		c, err := respFeature.Geometry.Coordinates.Parse()
 		if err != nil {
 			return nil, fmt.Errorf("invalid coordinates: %s", err)
 		}
 		result := domain.Weather{
-			Coordinates: domain.Coordinates{
-				Latitude:  c.Latitude,
-				Longitude: c.Longitude,
+			Location: domain.Location{
+				Name: locations[i].Name,
+				Coordinates: domain.Coordinates{
+					Latitude:  c.Latitude,
+					Longitude: c.Longitude,
+				},
 			},
 		}
 		for _, respWeather := range respFeature.Property.WeatherList.Weather {

@@ -10,13 +10,13 @@ type SlackService struct {
 	Client *slack.Client
 }
 
-func (s *SlackService) Send(notification domain.Notification) error {
+func (s *SlackService) Send(message domain.Message) error {
 	err := s.Client.Send(&slack.Message{
 		Username:  "amefuriso",
 		IconEmoji: ":umbrella_with_rain_drops:",
 		Attachments: []slack.Attachment{{
-			Text:     notification.Text,
-			ImageURL: notification.ImageURL,
+			Text:     message.Text,
+			ImageURL: message.ImageURL,
 		}},
 	})
 	if err != nil {

@@ -3,13 +3,15 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/int128/amefuriso/adapters"
-	"github.com/int128/go-yahoo-weather/weather"
 	"log"
 	"math"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/int128/amefuriso/domain"
+	"github.com/int128/amefuriso/externals"
+	"github.com/int128/go-yahoo-weather/weather"
 )
 
 type options struct {
@@ -19,22 +21,17 @@ type options struct {
 }
 
 func run(o options) error {
-	req := weather.Request{
-		Coordinates: []weather.Coordinates{{
+	weatherService := externals.WeatherService{
+		Client: weather.NewClient(o.clientID),
+	}
+	weathers, err := weatherService.Get([]domain.Location{{
+		Coordinates: domain.Coordinates{
 			Latitude:  o.latitude,
 			Longitude: o.longitude,
-		}},
-		IntervalMinutes: 5,
-		PastHours:       1,
-	}
-	c := weather.NewClient(o.clientID)
-	resp, err := c.Get(&req)
+		},
+	}})
 	if err != nil {
 		return fmt.Errorf("error while getting weather: %s", err)
-	}
-	weathers, err := adapters.Weathers(resp)
-	if err != nil {
-		return fmt.Errorf("error while parsing response: %s", err)
 	}
 	for _, w := range weathers {
 		for _, rainfall := range w.RainfallObservation {

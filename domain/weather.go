@@ -10,8 +10,13 @@ type Coordinates struct {
 	Longitude float64
 }
 
+type Location struct {
+	Name        string
+	Coordinates Coordinates
+}
+
 type Weather struct {
-	Coordinates         Coordinates
+	Location            Location
 	RainfallObservation []Rainfall
 	RainfallForecast    []Rainfall
 }
