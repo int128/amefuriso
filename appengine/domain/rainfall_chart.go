@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/int128/amefuriso/domain"
+	"github.com/int128/amefuriso/core/domain"
 )
 
 type RainfallChart struct {

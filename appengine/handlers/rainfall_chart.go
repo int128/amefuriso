@@ -3,8 +3,8 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/int128/amefuriso/appengine/domain"
 	"github.com/int128/amefuriso/appengine/externals"
-	"github.com/int128/amefuriso/domain"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )

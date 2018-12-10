@@ -3,8 +3,8 @@ package usecases
 import (
 	"context"
 
-	"github.com/int128/amefuriso/domain"
-	"github.com/int128/amefuriso/externals"
+	"github.com/int128/amefuriso/core/domain"
+	"github.com/int128/amefuriso/core/externals"
 	"github.com/pkg/errors"
 )
 

@@ -3,7 +3,7 @@ package externals
 import (
 	"net/http"
 
-	"github.com/int128/amefuriso/domain"
+	"github.com/int128/amefuriso/core/domain"
 	"github.com/int128/slack"
 	"github.com/pkg/errors"
 )

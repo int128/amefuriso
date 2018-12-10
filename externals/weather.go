@@ -3,7 +3,7 @@ package externals
 import (
 	"fmt"
 
-	"github.com/int128/amefuriso/domain"
+	"github.com/int128/amefuriso/core/domain"
 	"github.com/int128/go-yahoo-weather/weather"
 	"github.com/pkg/errors"
 )

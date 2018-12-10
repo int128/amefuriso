@@ -6,8 +6,8 @@ import (
 	"os"
 
 	aeExternals "github.com/int128/amefuriso/appengine/externals"
+	"github.com/int128/amefuriso/core/usecases"
 	"github.com/int128/amefuriso/externals"
-	"github.com/int128/amefuriso/usecases"
 	"github.com/int128/go-yahoo-weather/weather"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
@@ -21,7 +21,7 @@ func (h *PollWeathers) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	httpClient := urlfetch.Client(ctx)
 	u := usecases.PollWeathers{
 		SubscriptionRepository: &aeExternals.SubscriptionRepository{},
-		WeatherService: externals.WeatherService{
+		WeatherService: &externals.WeatherService{
 			Client: &weather.Client{
 				ClientID: os.Getenv("YAHOO_CLIENT_ID"), //TODO
 				Client:   httpClient,

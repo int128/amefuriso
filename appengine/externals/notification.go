@@ -5,8 +5,8 @@ import (
 	"time"
 
 	aeDomain "github.com/int128/amefuriso/appengine/domain"
-	"github.com/int128/amefuriso/chart"
-	"github.com/int128/amefuriso/domain"
+	"github.com/int128/amefuriso/core/chart"
+	"github.com/int128/amefuriso/core/domain"
 	"github.com/int128/amefuriso/externals"
 	"github.com/pkg/errors"
 	"google.golang.org/appengine/log"
