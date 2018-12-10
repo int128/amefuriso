@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	aeDomain "github.com/int128/amefuriso/appengine/domain"
 	"github.com/int128/amefuriso/domain"
 	"github.com/pkg/errors"
 	"google.golang.org/appengine"
@@ -17,13 +18,13 @@ type rainfallChart struct {
 	Coordinates appengine.GeoPoint
 }
 
-func newChartKey(ctx context.Context, id domain.RainfallChartID) *datastore.Key {
+func newChartKey(ctx context.Context, id aeDomain.RainfallChartID) *datastore.Key {
 	return datastore.NewKey(ctx, "RainfallChart", id.String(), 0, nil)
 }
 
 type RainfallChartRepository struct{}
 
-func (r *RainfallChartRepository) FindById(ctx context.Context, id domain.RainfallChartID) (*domain.RainfallChart, error) {
+func (r *RainfallChartRepository) FindById(ctx context.Context, id aeDomain.RainfallChartID) (*aeDomain.RainfallChart, error) {
 	k := newChartKey(ctx, id)
 	var e rainfallChart
 	err := datastore.Get(ctx, k, &e)
@@ -33,7 +34,7 @@ func (r *RainfallChartRepository) FindById(ctx context.Context, id domain.Rainfa
 		}
 		return nil, errors.Wrapf(err, "error while getting the RainfallChart entity")
 	}
-	return &domain.RainfallChart{
+	return &aeDomain.RainfallChart{
 		ID:          id,
 		Image:       e.Image,
 		ContentType: e.ContentType,
@@ -42,7 +43,7 @@ func (r *RainfallChartRepository) FindById(ctx context.Context, id domain.Rainfa
 	}, nil
 }
 
-func (r *RainfallChartRepository) Save(ctx context.Context, chart domain.RainfallChart) error {
+func (r *RainfallChartRepository) Save(ctx context.Context, chart aeDomain.RainfallChart) error {
 	k := newChartKey(ctx, chart.ID)
 	e := rainfallChart{
 		Image:       chart.Image,

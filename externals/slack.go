@@ -1,17 +1,24 @@
 package externals
 
 import (
+	"net/http"
+
 	"github.com/int128/amefuriso/domain"
 	"github.com/int128/slack"
 	"github.com/pkg/errors"
 )
 
 type SlackService struct {
-	Client *slack.Client
+	Client *http.Client
 }
 
-func (s *SlackService) Send(message domain.Message) error {
-	err := s.Client.Send(&slack.Message{
+func (s *SlackService) Send(destination domain.Slack, message domain.Message) error {
+	c := slack.Client{
+		HTTPClient: s.Client,
+		WebhookURL: destination.WebhookURL,
+	}
+	err := c.Send(&slack.Message{
+		Channel:   destination.Channel,
 		Username:  "amefuriso",
 		IconEmoji: ":umbrella_with_rain_drops:",
 		Attachments: []slack.Attachment{{

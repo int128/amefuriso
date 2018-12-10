@@ -5,6 +5,8 @@ import (
 	"encoding/binary"
 	"fmt"
 	"time"
+
+	"github.com/int128/amefuriso/domain"
 )
 
 type RainfallChart struct {
@@ -12,7 +14,7 @@ type RainfallChart struct {
 	Image       []byte
 	ContentType string
 	Time        time.Time
-	Coordinates Coordinates
+	Coordinates domain.Coordinates
 }
 
 type RainfallChartID string
