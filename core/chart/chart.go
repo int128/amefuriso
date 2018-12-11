@@ -30,13 +30,13 @@ func init() {
 const (
 	canvasWidth = boxLeft + boxWidth + boxRight
 
-	boxWidth  = 500
-	boxTop    = 100
-	boxBottom = 100
-	boxLeft   = 150
-	boxRight  = 150
+	boxWidth  = 300
+	boxTop    = 10
+	boxBottom = 10
+	boxLeft   = 90
+	boxRight  = 10
 
-	labelLeft = 75
+	labelLeft = 10
 	barScale  = 30
 	barHeight = 30
 )
