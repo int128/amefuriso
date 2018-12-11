@@ -2,6 +2,7 @@ package externals
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/int128/amefuriso/core/domain"
 	"github.com/int128/go-yahoo-weather/weather"
@@ -9,7 +10,8 @@ import (
 )
 
 type WeatherService struct {
-	Client *weather.Client
+	Client   *http.Client
+	ClientID string
 }
 
 func (s *WeatherService) Get(locations []domain.Location) ([]domain.Weather, error) {
@@ -23,7 +25,11 @@ func (s *WeatherService) Get(locations []domain.Location) ([]domain.Weather, err
 			Longitude: location.Coordinates.Longitude,
 		})
 	}
-	resp, err := s.Client.Get(&req)
+	c := weather.Client{
+		Client:   s.Client,
+		ClientID: s.ClientID,
+	}
+	resp, err := c.Get(&req)
 	if err != nil {
 		return nil, errors.Wrapf(err, "error while getting weather")
 	}

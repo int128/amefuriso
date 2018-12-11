@@ -1,60 +1,43 @@
 package main
 
 import (
-	"context"
 	"flag"
-	"fmt"
 	"log"
-	"math"
 	"os"
-	"strings"
-	"time"
 
 	"github.com/int128/amefuriso/core/domain"
-	"github.com/int128/amefuriso/core/usecases"
+	"github.com/int128/amefuriso/core/presenters/cli"
 	"github.com/int128/amefuriso/externals"
-	"github.com/int128/go-yahoo-weather/weather"
+	"github.com/pkg/errors"
 )
 
-type subscriptionRepository domain.Subscription
-
-func (r subscriptionRepository) FindAll(ctx context.Context) ([]domain.Subscription, error) {
-	return []domain.Subscription{domain.Subscription(r)}, nil
+type options struct {
+	clientID string
 }
 
-type notificationService struct{}
-
-func (e *notificationService) Send(ctx context.Context, notification domain.Slack, weather domain.Weather) error {
-	for _, rainfall := range weather.RainfallObservation {
-		t := rainfall.Time.Format("15:04")
-		mark := strings.Repeat("🌧 ", int(math.Ceil(float64(rainfall.Amount))))
-		fmt.Printf("| %s |         | %5.2f mm/h | %s\n", t, rainfall.Amount, mark)
+func (o *options) run(locations []domain.Location) error {
+	weatherService := externals.WeatherService{ClientID: o.clientID}
+	weathers, err := weatherService.Get(locations)
+	if err != nil {
+		return errors.Wrapf(err, "error while getting weather")
 	}
-	for _, rainfall := range weather.RainfallForecast {
-		t := rainfall.Time.Format("15:04")
-		d := -time.Since(rainfall.Time).Minutes()
-		mark := strings.Repeat("🌧 ", int(math.Ceil(float64(rainfall.Amount))))
-		fmt.Printf("| %s | %+3.0f min | %5.2f mm/h | %s\n", t, d, rainfall.Amount, mark)
+	for _, weather := range weathers {
+		if err := cli.Draw(os.Stdout, weather); err != nil {
+			return errors.Wrapf(err, "error while drawing weather")
+		}
 	}
 	return nil
 }
 
 func main() {
-	var subscription domain.Subscription
-	flag.StringVar(&subscription.Location.Name, "name", "Roppongi", "Location Name")
-	flag.Float64Var(&subscription.Location.Coordinates.Latitude, "lat", 35.663613, "Latitude")
-	flag.Float64Var(&subscription.Location.Coordinates.Longitude, "lon", 139.732293, "Longitude")
+	var location domain.Location
+	flag.Float64Var(&location.Coordinates.Latitude, "lat", 35.663613, "Latitude")
+	flag.Float64Var(&location.Coordinates.Longitude, "lon", 139.732293, "Longitude")
+	var o options
+	flag.StringVar(&o.clientID, "client-id", os.Getenv("YAHOO_CLIENT_ID"), "Yahoo Weather API Client ID")
 	flag.Parse()
 
-	u := usecases.PollWeathers{
-		SubscriptionRepository: subscriptionRepository(subscription),
-		WeatherService: &externals.WeatherService{
-			Client: &weather.Client{ClientID: os.Getenv("YAHOO_CLIENT_ID")},
-		},
-		NotificationService: &notificationService{},
-	}
-	ctx := context.Background()
-	if err := u.Do(ctx); err != nil {
+	if err := o.run([]domain.Location{location}); err != nil {
 		log.Fatalf("Error: %s", err)
 	}
 }

@@ -9,8 +9,8 @@ import (
 
 func router() http.Handler {
 	m := http.NewServeMux()
-	m.Handle("/png", &handlers.PNG{})
-	m.Handle("/internal/poll-weather", &handlers.PollWeathers{})
+	m.HandleFunc("/png", handlers.PNG)
+	m.HandleFunc("/internal/poll-weather", handlers.PollWeathers)
 	return m
 }
 

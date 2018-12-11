@@ -8,9 +8,7 @@ import (
 	"google.golang.org/appengine/log"
 )
 
-type PNG struct{}
-
-func (h *PNG) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+func PNG(w http.ResponseWriter, req *http.Request) {
 	id := req.URL.Query().Get("id")
 	if id == "" {
 		http.Error(w, "missing parameter", 400)
@@ -29,6 +27,7 @@ func (h *PNG) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, "not found", 404)
 		return
 	}
+
 	w.Header().Set("content-type", "image/png")
 	if _, err := w.Write(b); err != nil {
 		log.Errorf(ctx, "error while writing image: %s", err)
