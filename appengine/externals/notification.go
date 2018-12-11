@@ -40,8 +40,8 @@ func (e *NotificationService) Send(ctx context.Context, notification domain.Slac
 		return nil
 	}
 	message := domain.Message{
-		Text:     "Rainfall",
-		ImageURL: "", //TODO
+		Text:     weather.Location.Name,
+		ImageURL: url,
 	}
 	if err := e.SlackService.Send(notification, message); err != nil {
 		return errors.Wrapf(err, "error while sending the message")
