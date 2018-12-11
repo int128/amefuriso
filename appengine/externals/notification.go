@@ -2,14 +2,13 @@ package externals
 
 import (
 	"context"
+	"strconv"
 	"time"
 
-	aeDomain "github.com/int128/amefuriso/appengine/domain"
 	"github.com/int128/amefuriso/core/chart"
 	"github.com/int128/amefuriso/core/domain"
 	"github.com/int128/amefuriso/externals"
 	"github.com/pkg/errors"
-	"google.golang.org/appengine/log"
 )
 
 type NotificationService struct {
@@ -18,27 +17,20 @@ type NotificationService struct {
 }
 
 func (e *NotificationService) Send(ctx context.Context, notification domain.Slack, weather domain.Weather) error {
+	if notification.IsZero() {
+		return nil
+	}
+
 	b, err := chart.DrawPNG(weather)
 	if err != nil {
 		return errors.Wrapf(err, "error while drawing rainfall chart")
 	}
-	c := aeDomain.RainfallChart{
-		ID:          aeDomain.NewRainfallChartID(),
-		Image:       b,
-		ContentType: "image/png",
-		Time:        time.Now(),
-		Coordinates: weather.Location.Coordinates,
-	}
-	var chartRepository RainfallChartRepository
-	if err := chartRepository.Save(ctx, c); err != nil {
+	id := strconv.FormatInt(time.Now().UnixNano(), 36)
+	var pngRepository PNGRepository
+	if err := pngRepository.Save(ctx, id, b); err != nil {
 		return errors.Wrapf(err, "error while saving the image")
 	}
-
-	url := e.BaseURL + "/rainfall?id=" + c.ID.String()
-	log.Debugf(ctx, "image is available at %s", url)
-	if notification.IsZero() {
-		return nil
-	}
+	url := e.BaseURL + "/png?id=" + id
 	message := domain.Message{
 		Text:     weather.Location.Name,
 		ImageURL: url,
