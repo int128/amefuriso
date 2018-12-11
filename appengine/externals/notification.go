@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/int128/amefuriso/core/chart"
 	"github.com/int128/amefuriso/core/domain"
+	"github.com/int128/amefuriso/core/presenters/chart"
 	"github.com/int128/amefuriso/externals"
 	"github.com/pkg/errors"
 )
