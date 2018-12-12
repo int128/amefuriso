@@ -4,8 +4,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/int128/amefuriso/core/domain"
-	"github.com/int128/amefuriso/core/presenters/chart"
+	"github.com/int128/amefurisobot/core/domain"
+	"github.com/int128/amefurisobot/core/presenters/chart"
 	"github.com/int128/go-yahoo-weather/weather"
 	"github.com/llgcode/draw2d/draw2dimg"
 )

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/int128/amefuriso/core/domain"
+	"github.com/int128/amefurisobot/core/domain"
 	"github.com/int128/go-yahoo-weather/weather"
 	"github.com/pkg/errors"
 )

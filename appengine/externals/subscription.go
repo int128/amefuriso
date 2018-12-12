@@ -3,7 +3,7 @@ package externals
 import (
 	"context"
 
-	"github.com/int128/amefuriso/core/domain"
+	"github.com/int128/amefurisobot/core/domain"
 	"github.com/pkg/errors"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/datastore"

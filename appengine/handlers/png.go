@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/int128/amefuriso/appengine/externals"
+	"github.com/int128/amefurisobot/appengine/externals"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )

@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"os"
 
-	aeExternals "github.com/int128/amefuriso/appengine/externals"
-	"github.com/int128/amefuriso/appengine/usecases"
-	"github.com/int128/amefuriso/externals"
+	aeExternals "github.com/int128/amefurisobot/appengine/externals"
+	"github.com/int128/amefurisobot/appengine/usecases"
+	"github.com/int128/amefurisobot/externals"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/urlfetch"

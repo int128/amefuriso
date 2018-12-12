@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/int128/amefuriso/appengine/handlers"
+	"github.com/int128/amefurisobot/appengine/handlers"
 	"google.golang.org/appengine"
 )
 

@@ -1,4 +1,4 @@
-module github.com/int128/amefuriso
+module github.com/int128/amefurisobot
 
 require (
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
