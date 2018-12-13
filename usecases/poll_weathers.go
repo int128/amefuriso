@@ -15,7 +15,7 @@ type PollWeathers struct {
 	WeatherService         WeatherService
 	PNGRepository          PNGRepository
 	PNGURL                 func(id string) string
-	SlackService           SlackService
+	NotificationService    NotificationService
 }
 
 func (u *PollWeathers) Do(ctx context.Context) error {
@@ -55,7 +55,7 @@ func (u *PollWeathers) Do(ctx context.Context) error {
 			Text:     weather.Location.Name,
 			ImageURL: u.PNGURL(id),
 		}
-		if err := u.SlackService.Send(subscription.Notification, message); err != nil {
+		if err := u.NotificationService.Send(subscription.Notification, message); err != nil {
 			return errors.Wrapf(err, "error while sending the message")
 		}
 	}

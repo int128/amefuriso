@@ -26,7 +26,7 @@ func PollWeathers(w http.ResponseWriter, req *http.Request) {
 		PNGURL: func(id string) string {
 			return baseURL(req) + "/png?id=" + id
 		},
-		SlackService: &externals.SlackService{Client: httpClient},
+		NotificationService: &externals.NotificationService{Client: httpClient},
 	}
 
 	if err := u.Do(ctx); err != nil {

@@ -19,6 +19,6 @@ type WeatherService interface {
 	Get(locations []domain.Location) ([]domain.Weather, error)
 }
 
-type SlackService interface {
-	Send(destination domain.Slack, message domain.Message) error
+type NotificationService interface {
+	Send(destination domain.Notification, message domain.Message) error
 }

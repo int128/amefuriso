@@ -12,10 +12,9 @@ import (
 const subscriptionKind = "Subscription"
 
 type subscriptionEntity struct {
-	LocationName string
-	Coordinates  appengine.GeoPoint
-	SlackWebhook string
-	SlackChannel string
+	LocationName    string
+	Coordinates     appengine.GeoPoint
+	SlackWebhookURL string
 }
 
 type SubscriptionRepository struct{}
@@ -35,9 +34,8 @@ func (r *SubscriptionRepository) FindAll(ctx context.Context) ([]domain.Subscrip
 				Name:        e.LocationName,
 				Coordinates: domain.Coordinates{Latitude: e.Coordinates.Lat, Longitude: e.Coordinates.Lng},
 			},
-			Notification: domain.Slack{
-				WebhookURL: e.SlackWebhook,
-				Channel:    e.SlackChannel,
+			Notification: domain.Notification{
+				SlackWebhookURL: e.SlackWebhookURL,
 			},
 		})
 	}

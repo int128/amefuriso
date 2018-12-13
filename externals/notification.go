@@ -8,26 +8,23 @@ import (
 	"github.com/pkg/errors"
 )
 
-type SlackService struct {
+type NotificationService struct {
 	Client *http.Client
 }
 
-func (s *SlackService) Send(destination domain.Slack, message domain.Message) error {
+func (s *NotificationService) Send(notification domain.Notification, message domain.Message) error {
 	c := slack.Client{
 		HTTPClient: s.Client,
-		WebhookURL: destination.WebhookURL,
+		WebhookURL: notification.SlackWebhookURL,
 	}
 	err := c.Send(&slack.Message{
-		Channel:   destination.Channel,
-		Username:  "amefuriso",
-		IconEmoji: ":umbrella_with_rain_drops:",
 		Attachments: []slack.Attachment{{
 			Text:     message.Text,
 			ImageURL: message.ImageURL,
 		}},
 	})
 	if err != nil {
-		return errors.Wrapf(err, "error while sending a message to Slack")
+		return errors.Wrapf(err, "error while sending Slack notification")
 	}
 	return nil
 }
