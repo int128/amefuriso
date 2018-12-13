@@ -3,7 +3,7 @@ package usecases
 import (
 	"context"
 
-	"github.com/int128/amefurisobot/core/domain"
+	"github.com/int128/amefurisobot/domain"
 )
 
 type SubscriptionRepository interface {

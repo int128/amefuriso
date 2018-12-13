@@ -5,9 +5,8 @@ import (
 	"net/http"
 	"os"
 
-	aeExternals "github.com/int128/amefurisobot/appengine/externals"
-	"github.com/int128/amefurisobot/appengine/usecases"
 	"github.com/int128/amefurisobot/externals"
+	"github.com/int128/amefurisobot/usecases"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/urlfetch"
@@ -18,12 +17,12 @@ func PollWeathers(w http.ResponseWriter, req *http.Request) {
 	httpClient := urlfetch.Client(ctx)
 
 	u := usecases.PollWeathers{
-		SubscriptionRepository: &aeExternals.SubscriptionRepository{},
+		SubscriptionRepository: &externals.SubscriptionRepository{},
 		WeatherService: &externals.WeatherService{
 			Client:   httpClient,
 			ClientID: os.Getenv("YAHOO_CLIENT_ID"), //TODO
 		},
-		PNGRepository: &aeExternals.PNGRepository{},
+		PNGRepository: &externals.PNGRepository{},
 		PNGURL: func(id string) string {
 			return baseURL(req) + "/png?id=" + id
 		},
