@@ -2,14 +2,12 @@ package handlers
 
 import (
 	"fmt"
-	"net/http"
-	"os"
-
 	"github.com/int128/amefurisobot/externals"
 	"github.com/int128/amefurisobot/usecases"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/urlfetch"
+	"net/http"
 )
 
 func PollWeathers(w http.ResponseWriter, req *http.Request) {
@@ -17,15 +15,13 @@ func PollWeathers(w http.ResponseWriter, req *http.Request) {
 	httpClient := urlfetch.Client(ctx)
 
 	u := usecases.PollWeathers{
+		UserRepository:         &externals.UserRepository{},
 		SubscriptionRepository: &externals.SubscriptionRepository{},
-		WeatherService: &externals.WeatherService{
-			Client:   httpClient,
-			ClientID: os.Getenv("YAHOO_CLIENT_ID"), //TODO
-		},
-		PNGRepository: &externals.PNGRepository{},
+		PNGRepository:          &externals.PNGRepository{},
 		PNGURL: func(id string) string {
 			return baseURL(req) + "/png?id=" + id
 		},
+		WeatherService:      &externals.WeatherService{Client: httpClient},
 		NotificationService: &externals.NotificationService{Client: httpClient},
 	}
 

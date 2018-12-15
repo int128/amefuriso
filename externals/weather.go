@@ -10,11 +10,10 @@ import (
 )
 
 type WeatherService struct {
-	Client   *http.Client
-	ClientID string
+	Client *http.Client
 }
 
-func (s *WeatherService) Get(locations []domain.Location) ([]domain.Weather, error) {
+func (s *WeatherService) Get(clientID domain.YahooClientID, locations []domain.Location) ([]domain.Weather, error) {
 	req := weather.Request{
 		IntervalMinutes: 5,
 		PastHours:       1,
@@ -25,10 +24,7 @@ func (s *WeatherService) Get(locations []domain.Location) ([]domain.Weather, err
 			Longitude: location.Coordinates.Longitude,
 		})
 	}
-	c := weather.Client{
-		Client:   s.Client,
-		ClientID: s.ClientID,
-	}
+	c := weather.Client{Client: s.Client, ClientID: string(clientID)}
 	resp, err := c.Get(&req)
 	if err != nil {
 		return nil, errors.Wrapf(err, "error while getting weather")

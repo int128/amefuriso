@@ -11,6 +11,7 @@ import (
 )
 
 type PollWeathers struct {
+	UserRepository         UserRepository
 	SubscriptionRepository SubscriptionRepository
 	WeatherService         WeatherService
 	PNGRepository          PNGRepository
@@ -19,7 +20,20 @@ type PollWeathers struct {
 }
 
 func (u *PollWeathers) Do(ctx context.Context) error {
-	subscriptions, err := u.SubscriptionRepository.FindAll(ctx)
+	users, err := u.UserRepository.FindAll(ctx)
+	if err != nil {
+		return errors.Wrapf(err, "error while getting users")
+	}
+	for _, user := range users {
+		if err := u.doUser(ctx, user); err != nil {
+			return errors.Wrapf(err, "error while polling weathers of user %s", user.ID)
+		}
+	}
+	return nil
+}
+
+func (u *PollWeathers) doUser(ctx context.Context, user domain.User) error {
+	subscriptions, err := u.SubscriptionRepository.FindByUserID(ctx, user.ID)
 	if err != nil {
 		return errors.Wrapf(err, "error while getting subscriptions")
 	}
@@ -30,7 +44,7 @@ func (u *PollWeathers) Do(ctx context.Context) error {
 	for _, subscription := range subscriptions {
 		locations = append(locations, subscription.Location)
 	}
-	weathers, err := u.WeatherService.Get(locations)
+	weathers, err := u.WeatherService.Get(user.YahooClientID, locations)
 	if err != nil {
 		return errors.Wrapf(err, "error while getting weather")
 	}

@@ -6,8 +6,14 @@ import (
 	"github.com/int128/amefurisobot/domain"
 )
 
+type UserRepository interface {
+	FindAll(ctx context.Context) ([]domain.User, error)
+	Save(ctx context.Context, user domain.User) error
+}
+
 type SubscriptionRepository interface {
-	FindAll(ctx context.Context) ([]domain.Subscription, error)
+	FindByUserID(ctx context.Context, userID domain.UserID) ([]domain.Subscription, error)
+	Save(ctx context.Context, userID domain.UserID, subscriptions []domain.Subscription) error
 }
 
 type PNGRepository interface {
@@ -16,7 +22,7 @@ type PNGRepository interface {
 }
 
 type WeatherService interface {
-	Get(locations []domain.Location) ([]domain.Weather, error)
+	Get(clientID domain.YahooClientID, locations []domain.Location) ([]domain.Weather, error)
 }
 
 type NotificationService interface {
