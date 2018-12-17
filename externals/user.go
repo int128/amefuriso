@@ -55,6 +55,9 @@ func (r *UserRepository) FindById(ctx context.Context, id domain.UserID) (*domai
 }
 
 func (r *UserRepository) Save(ctx context.Context, user domain.User) error {
+	if user.ID == "" {
+		return errors.Errorf("User.ID must not be empty: %+v", user)
+	}
 	k := newUserKey(ctx, user.ID)
 	e := userEntity{
 		YahooClientID: string(user.YahooClientID),

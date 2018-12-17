@@ -26,12 +26,14 @@ type SubscriptionRepository struct{}
 func (r *SubscriptionRepository) FindByUserID(ctx context.Context, userID domain.UserID) ([]domain.Subscription, error) {
 	q := datastore.NewQuery(subscriptionKind).Ancestor(newUserKey(ctx, userID))
 	var entities []subscriptionEntity
-	if _, err := q.GetAll(ctx, &entities); err != nil {
+	keys, err := q.GetAll(ctx, &entities)
+	if err != nil {
 		return nil, errors.Wrapf(err, "error while getting entities")
 	}
 	var ret []domain.Subscription
-	for _, e := range entities {
+	for i, e := range entities {
 		ret = append(ret, domain.Subscription{
+			ID: domain.SubscriptionID(keys[i].StringID()),
 			Location: domain.Location{
 				Name:        e.LocationName,
 				Coordinates: domain.Coordinates{Latitude: e.Coordinates.Lat, Longitude: e.Coordinates.Lng},
@@ -45,9 +47,15 @@ func (r *SubscriptionRepository) FindByUserID(ctx context.Context, userID domain
 }
 
 func (r *SubscriptionRepository) Save(ctx context.Context, userID domain.UserID, subscriptions []domain.Subscription) error {
+	if userID == "" {
+		return errors.Errorf("userID must not be empty")
+	}
 	var keys []*datastore.Key
 	var entities []*subscriptionEntity
 	for _, subscription := range subscriptions {
+		if subscription.ID == "" {
+			return errors.Errorf("Subscription.ID must not be empty")
+		}
 		k := newSubscriptionKey(ctx, userID, subscription.ID)
 		e := subscriptionEntity{
 			LocationName: subscription.Location.Name,

@@ -11,6 +11,7 @@ func router() http.Handler {
 	m := http.NewServeMux()
 	m.HandleFunc("/png", handlers.PNG)
 	m.HandleFunc("/internal/poll-weather", handlers.PollWeathers)
+	m.HandleFunc("/internal/setup", handlers.Setup)
 	return m
 }
 
