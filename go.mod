@@ -1,6 +1,7 @@
 module github.com/int128/amefurisobot
 
 require (
+	github.com/favclip/testerator v0.0.0-20181109065310-c967692c9c65
 	github.com/go-test/deep v1.0.1
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
 	github.com/google/uuid v1.1.0

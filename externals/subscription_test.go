@@ -1,20 +1,20 @@
 package externals
 
 import (
+	"github.com/favclip/testerator"
 	"github.com/go-test/deep"
 	"github.com/int128/amefurisobot/domain"
 	"google.golang.org/appengine"
-	"google.golang.org/appengine/aetest"
 	"google.golang.org/appengine/datastore"
 	"testing"
 )
 
 func TestSubscriptionRepository_FindBySubscriptionID(t *testing.T) {
-	ctx, shutdown, err := aetest.NewContext()
+	_, ctx, err := testerator.SpinUp()
 	if err != nil {
-		t.Fatalf("error while initializing context: %s", err)
+		t.Fatalf("error while spin-up of test instance: %s", err)
 	}
-	defer shutdown()
+	defer testerator.SpinDown()
 	var r SubscriptionRepository
 
 	t.Run("ExactOne", func(t *testing.T) {
@@ -55,11 +55,11 @@ func TestSubscriptionRepository_FindBySubscriptionID(t *testing.T) {
 }
 
 func TestSubscriptionRepository_FindByUserID_empty(t *testing.T) {
-	ctx, shutdown, err := aetest.NewContext()
+	_, ctx, err := testerator.SpinUp()
 	if err != nil {
-		t.Fatalf("error while initializing context: %s", err)
+		t.Fatalf("error while spin-up of test instance: %s", err)
 	}
-	defer shutdown()
+	defer testerator.SpinDown()
 	var r SubscriptionRepository
 
 	t.Run("OneEntity", func(t *testing.T) {
