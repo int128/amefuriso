@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"github.com/int128/amefurisobot/domain"
 	"github.com/int128/amefurisobot/externals"
 	"github.com/int128/amefurisobot/usecases"
 	"google.golang.org/appengine"
@@ -18,8 +19,8 @@ func PollWeathers(w http.ResponseWriter, req *http.Request) {
 		UserRepository:         &externals.UserRepository{},
 		SubscriptionRepository: &externals.SubscriptionRepository{},
 		PNGRepository:          &externals.PNGRepository{},
-		PNGURL: func(id string) string {
-			return baseURL(req) + "/png?id=" + id
+		PNGImageURL: func(id domain.ImageID) string {
+			return baseURL(req) + "/png?id=" + string(id)
 		},
 		WeatherService:      &externals.WeatherService{Client: httpClient},
 		NotificationService: &externals.NotificationService{Client: httpClient},

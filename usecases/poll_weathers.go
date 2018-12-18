@@ -2,8 +2,6 @@ package usecases
 
 import (
 	"context"
-	"strconv"
-	"time"
 
 	"github.com/int128/amefurisobot/domain"
 	"github.com/int128/amefurisobot/presenters/chart"
@@ -15,7 +13,7 @@ type PollWeathers struct {
 	SubscriptionRepository SubscriptionRepository
 	WeatherService         WeatherService
 	PNGRepository          PNGRepository
-	PNGURL                 func(id string) string
+	PNGImageURL            func(id domain.ImageID) string
 	NotificationService    NotificationService
 }
 
@@ -61,13 +59,13 @@ func (u *PollWeathers) doUser(ctx context.Context, user domain.User) error {
 		if err != nil {
 			return errors.Wrapf(err, "error while drawing rainfall chart")
 		}
-		id := strconv.FormatInt(time.Now().UnixNano(), 36)
-		if err := u.PNGRepository.Save(ctx, id, b); err != nil {
+		image := domain.NewPNGImage(b)
+		if err := u.PNGRepository.Save(ctx, image); err != nil {
 			return errors.Wrapf(err, "error while saving the image")
 		}
 		message := domain.Message{
 			Text:     weather.Location.Name,
-			ImageURL: u.PNGURL(id),
+			ImageURL: u.PNGImageURL(image.ID),
 		}
 		if err := u.NotificationService.Send(subscription.Notification, message); err != nil {
 			return errors.Wrapf(err, "error while sending the message")

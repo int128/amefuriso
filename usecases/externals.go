@@ -19,8 +19,8 @@ type SubscriptionRepository interface {
 }
 
 type PNGRepository interface {
-	GetById(ctx context.Context, id string) ([]byte, error)
-	Save(ctx context.Context, id string, b []byte) error
+	FindById(ctx context.Context, id domain.ImageID) (*domain.Image, error)
+	Save(ctx context.Context, image domain.Image) error
 }
 
 type WeatherService interface {

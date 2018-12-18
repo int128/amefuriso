@@ -2,6 +2,7 @@ package externals
 
 import (
 	"context"
+	"github.com/int128/amefurisobot/domain"
 	"time"
 
 	"github.com/pkg/errors"
@@ -15,30 +16,35 @@ type pngEntity struct {
 	Time  time.Time
 }
 
-func newPNGKey(ctx context.Context, id string) *datastore.Key {
-	return datastore.NewKey(ctx, pngKind, id, 0, nil)
+func newPNGKey(ctx context.Context, id domain.ImageID) *datastore.Key {
+	return datastore.NewKey(ctx, pngKind, string(id), 0, nil)
 }
 
 type PNGRepository struct{}
 
-func (r *PNGRepository) GetById(ctx context.Context, id string) ([]byte, error) {
+func (r *PNGRepository) FindById(ctx context.Context, id domain.ImageID) (*domain.Image, error) {
 	k := newPNGKey(ctx, id)
 	var e pngEntity
 	err := datastore.Get(ctx, k, &e)
 	if err != nil {
 		if err == datastore.ErrNoSuchEntity {
-			return nil, nil
+			return nil, domain.ErrNoSuchImage{ID: id}
 		}
 		return nil, errors.Wrapf(err, "error while getting the entity")
 	}
-	return e.Image, nil
+	return &domain.Image{
+		ID:          id,
+		ContentType: domain.PNGContentType,
+		Bytes:       e.Image,
+		Time:        e.Time,
+	}, nil
 }
 
-func (r *PNGRepository) Save(ctx context.Context, id string, b []byte) error {
-	k := newPNGKey(ctx, id)
+func (r *PNGRepository) Save(ctx context.Context, image domain.Image) error {
+	k := newPNGKey(ctx, image.ID)
 	e := pngEntity{
-		Image: b,
-		Time:  time.Now(),
+		Image: image.Bytes,
+		Time:  image.Time,
 	}
 	_, err := datastore.Put(ctx, k, &e)
 	if err != nil {
