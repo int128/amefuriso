@@ -1,24 +1,31 @@
 package handlers
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/int128/amefurisobot/domain"
-	"github.com/int128/amefurisobot/externals"
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 )
 
-func PNG(w http.ResponseWriter, req *http.Request) {
+type GetPNGImageUsecase interface {
+	Do(ctx context.Context, id domain.ImageID) (*domain.Image, error)
+}
+
+type GetPNGImage struct {
+	ContextProvider ContextProvider
+	Usecase         GetPNGImageUsecase
+}
+
+func (h *GetPNGImage) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	id := req.URL.Query().Get("id")
 	if id == "" {
 		http.Error(w, "missing parameter", 400)
 		return
 	}
-	ctx := appengine.NewContext(req)
 
-	var pngRepository externals.PNGRepository
-	image, err := pngRepository.FindById(ctx, domain.ImageID(id))
+	ctx := h.ContextProvider(req)
+	image, err := h.Usecase.Do(ctx, domain.ImageID(id))
 	if err != nil {
 		if domain.IsErrNoSuchImage(err) {
 			http.Error(w, "not found", 404)

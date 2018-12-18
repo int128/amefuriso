@@ -1,32 +1,29 @@
 package handlers
 
 import (
+	"context"
 	"fmt"
 	"github.com/int128/amefurisobot/domain"
-	"github.com/int128/amefurisobot/externals"
 	"github.com/int128/amefurisobot/usecases"
-	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
-	"google.golang.org/appengine/urlfetch"
 	"net/http"
 )
 
-func PollWeathers(w http.ResponseWriter, req *http.Request) {
-	ctx := appengine.NewContext(req)
-	httpClient := urlfetch.Client(ctx)
+type PollWeathersUsecase interface {
+	Do(ctx context.Context, imageURL usecases.ImageURLProvider) error
+}
 
-	u := usecases.PollWeathers{
-		UserRepository:         &externals.UserRepository{},
-		SubscriptionRepository: &externals.SubscriptionRepository{},
-		PNGRepository:          &externals.PNGRepository{},
-		PNGImageURL: func(id domain.ImageID) string {
-			return baseURL(req) + "/png?id=" + string(id)
-		},
-		WeatherService:      &externals.WeatherService{Client: httpClient},
-		NotificationService: &externals.NotificationService{Client: httpClient},
+type PollWeathers struct {
+	ContextProvider ContextProvider
+	Usecase         PollWeathersUsecase
+}
+
+func (h *PollWeathers) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	ctx := h.ContextProvider(req)
+	imageURL := func(id domain.ImageID) string {
+		return baseURL(req) + "/png?id=" + string(id)
 	}
-
-	if err := u.Do(ctx); err != nil {
+	if err := h.Usecase.Do(ctx, imageURL); err != nil {
 		http.Error(w, fmt.Sprintf("Error: %s", err), 500)
 		log.Errorf(ctx, "Error: %s", err)
 	}

@@ -7,9 +7,9 @@ import (
 )
 
 type GetWeather struct {
-	UserRepository         UserRepository
-	SubscriptionRepository SubscriptionRepository
-	WeatherService         WeatherService
+	UserRepository         domain.UserRepository
+	SubscriptionRepository domain.SubscriptionRepository
+	WeatherService         domain.WeatherService
 }
 
 func (u *GetWeather) Do(ctx context.Context, userID domain.UserID, subscriptionID domain.SubscriptionID) (*domain.Weather, error) {
@@ -27,7 +27,7 @@ func (u *GetWeather) Do(ctx context.Context, userID domain.UserID, subscriptionI
 		}
 		return nil, errors.Wrapf(err, "error while finding subscription")
 	}
-	weathers, err := u.WeatherService.Get(user.YahooClientID, []domain.Location{subscription.Location})
+	weathers, err := u.WeatherService.Get(ctx, user.YahooClientID, []domain.Location{subscription.Location})
 	if err != nil {
 		return nil, errors.Wrapf(err, "error while fetching weather")
 	}

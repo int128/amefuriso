@@ -1,23 +1,53 @@
 package main
 
 import (
-	"github.com/gorilla/mux"
+	"context"
+	"github.com/int128/amefurisobot/externals"
+	"github.com/int128/amefurisobot/usecases"
 	"net/http"
 
 	"github.com/int128/amefurisobot/handlers"
 	"google.golang.org/appengine"
 )
 
-func router() http.Handler {
-	m := mux.NewRouter()
-	m.Path("/{userID}/{subscriptionID}/weather").Methods("GET").HandlerFunc(handlers.GetWeather)
-	m.Path("/png").Methods("GET").HandlerFunc(handlers.PNG)
-	m.Path("/internal/poll-weather").Methods("GET").HandlerFunc(handlers.PollWeathers)
-	m.Path("/internal/setup").Methods("GET").HandlerFunc(handlers.Setup)
-	return m
+func contextProvider(req *http.Request) context.Context {
+	return appengine.NewContext(req)
 }
 
 func main() {
-	http.Handle("/", router())
+	r := handlers.NewRouter(handlers.Handlers{
+		GetWeather: handlers.GetWeather{
+			ContextProvider: contextProvider,
+			Usecase: &usecases.GetWeather{
+				UserRepository:         &externals.UserRepository{},
+				SubscriptionRepository: &externals.SubscriptionRepository{},
+				WeatherService:         &externals.WeatherService{},
+			},
+		},
+		GetPNGImage: handlers.GetPNGImage{
+			ContextProvider: contextProvider,
+			Usecase: &usecases.GetPNGImage{
+				PNGRepository: &externals.PNGRepository{},
+			},
+		},
+		PollWeathers: handlers.PollWeathers{
+			ContextProvider: contextProvider,
+			Usecase: &usecases.PollWeathers{
+				UserRepository:         &externals.UserRepository{},
+				SubscriptionRepository: &externals.SubscriptionRepository{},
+				PNGRepository:          &externals.PNGRepository{},
+				WeatherService:         &externals.WeatherService{},
+				NotificationService:    &externals.NotificationService{},
+			},
+		},
+		Setup: handlers.Setup{
+			ContextProvider: contextProvider,
+			Usecase: &usecases.Setup{
+				SubscriptionRepository: &externals.SubscriptionRepository{},
+				UserRepository:         &externals.UserRepository{},
+			},
+		},
+	})
+	http.Handle("/", r)
 	appengine.Main()
 }

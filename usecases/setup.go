@@ -7,14 +7,14 @@ import (
 )
 
 type Setup struct {
-	UserRepository         UserRepository
-	SubscriptionRepository SubscriptionRepository
+	UserRepository         domain.UserRepository
+	SubscriptionRepository domain.SubscriptionRepository
 }
 
-func (u *Setup) Do(ctx context.Context) (domain.User, error) {
+func (u *Setup) Do(ctx context.Context) (*domain.User, error) {
 	user := domain.NewUser()
 	if err := u.UserRepository.Save(ctx, user); err != nil {
-		return domain.User{}, errors.Wrapf(err, "error while saving user %s", user)
+		return nil, errors.Wrapf(err, "error while saving user %s", user)
 	}
 
 	subscription := domain.NewSubscription(domain.Location{
@@ -24,7 +24,7 @@ func (u *Setup) Do(ctx context.Context) (domain.User, error) {
 	subscriptions := []domain.Subscription{subscription}
 
 	if err := u.SubscriptionRepository.Save(ctx, user.ID, subscriptions); err != nil {
-		return domain.User{}, errors.Wrapf(err, "error while saving subscriptions for user %s", user)
+		return nil, errors.Wrapf(err, "error while saving subscriptions for user %s", user)
 	}
-	return user, nil
+	return &user, nil
 }

@@ -1,19 +1,18 @@
 package externals
 
 import (
+	"context"
 	"fmt"
-	"net/http"
+	"google.golang.org/appengine/urlfetch"
 
 	"github.com/int128/amefurisobot/domain"
 	"github.com/int128/go-yahoo-weather/weather"
 	"github.com/pkg/errors"
 )
 
-type WeatherService struct {
-	Client *http.Client
-}
+type WeatherService struct{}
 
-func (s *WeatherService) Get(clientID domain.YahooClientID, locations []domain.Location) ([]domain.Weather, error) {
+func (s *WeatherService) Get(ctx context.Context, clientID domain.YahooClientID, locations []domain.Location) ([]domain.Weather, error) {
 	req := weather.Request{
 		IntervalMinutes: 5,
 		PastHours:       1,
@@ -24,7 +23,7 @@ func (s *WeatherService) Get(clientID domain.YahooClientID, locations []domain.L
 			Longitude: location.Coordinates.Longitude,
 		})
 	}
-	c := weather.Client{Client: s.Client, ClientID: string(clientID)}
+	c := weather.Client{Client: urlfetch.Client(ctx), ClientID: string(clientID)}
 	resp, err := c.Get(&req)
 	if err != nil {
 		return nil, errors.Wrapf(err, "error while getting weather")

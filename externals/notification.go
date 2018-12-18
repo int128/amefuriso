@@ -1,21 +1,20 @@
 package externals
 
 import (
-	"net/http"
+	"context"
 
 	"github.com/int128/amefurisobot/domain"
 	"github.com/int128/slack"
 	"github.com/pkg/errors"
+	"google.golang.org/appengine/urlfetch"
 )
 
-type NotificationService struct {
-	Client *http.Client
-}
+type NotificationService struct{}
 
-func (s *NotificationService) Send(notification domain.Notification, message domain.Message) error {
+func (s *NotificationService) Send(ctx context.Context, destination domain.Notification, message domain.Message) error {
 	c := slack.Client{
-		HTTPClient: s.Client,
-		WebhookURL: notification.SlackWebhookURL,
+		HTTPClient: urlfetch.Client(ctx),
+		WebhookURL: destination.SlackWebhookURL,
 	}
 	err := c.Send(&slack.Message{
 		Attachments: []slack.Attachment{{
