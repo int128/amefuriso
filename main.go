@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/gorilla/mux"
 	"net/http"
 
 	"github.com/int128/amefurisobot/handlers"
@@ -8,10 +9,11 @@ import (
 )
 
 func router() http.Handler {
-	m := http.NewServeMux()
-	m.HandleFunc("/png", handlers.PNG)
-	m.HandleFunc("/internal/poll-weather", handlers.PollWeathers)
-	m.HandleFunc("/internal/setup", handlers.Setup)
+	m := mux.NewRouter()
+	m.Path("/{userID}/{subscriptionID}/weather").Methods("GET").HandlerFunc(handlers.GetWeather)
+	m.Path("/png").Methods("GET").HandlerFunc(handlers.PNG)
+	m.Path("/internal/poll-weather").Methods("GET").HandlerFunc(handlers.PollWeathers)
+	m.Path("/internal/setup").Methods("GET").HandlerFunc(handlers.Setup)
 	return m
 }
 

@@ -8,6 +8,8 @@ github.com/golang/protobuf v1.2.0 h1:P3YflyNX/ehuJFLhxviNdFxQPkGK5cDcApsge1SqnvM
 github.com/golang/protobuf v1.2.0/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
 github.com/google/uuid v1.1.0 h1:Jf4mxPC/ziBnoPIdpQdPJ9OeiomAUHLvxmPRSPH9m4s=
 github.com/google/uuid v1.1.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
+github.com/gorilla/mux v1.6.2 h1:Pgr17XVTNXAk3q/r4CpKzC5xBM/qW1uVLV+IhRZpIIk=
+github.com/gorilla/mux v1.6.2/go.mod h1:1lud6UwP+6orDFRuTfBEV8e9/aOM/c4fVVCaMa2zaAs=
 github.com/int128/go-yahoo-weather v1.0.0 h1:0wlESpL2HrADHIUyKaz8OfHKcVkrWx4XC/jsVFs7fOQ=
 github.com/int128/go-yahoo-weather v1.0.0/go.mod h1:i3gxWuA5Y4WzhHCpo8P4FCtkcf3ihytoCznQnLf7v9k=
 github.com/int128/go-yahoo-weather v1.0.1 h1:WkFOm2WtZX6nvey/dwvgbsRS+HoSk75ahe6yD2Ec4DQ=

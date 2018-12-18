@@ -23,6 +23,27 @@ type subscriptionEntity struct {
 
 type SubscriptionRepository struct{}
 
+func (r *SubscriptionRepository) FindBySubscriptionID(ctx context.Context, userID domain.UserID, subscriptionID domain.SubscriptionID) (*domain.Subscription, error) {
+	k := newSubscriptionKey(ctx, userID, subscriptionID)
+	var e subscriptionEntity
+	if err := datastore.Get(ctx, k, &e); err != nil {
+		if err == datastore.ErrNoSuchEntity {
+			return nil, domain.ErrNoSuchSubscription{UserID: userID, SubscriptionID: subscriptionID}
+		}
+		return nil, errors.Wrapf(err, "error while getting entity")
+	}
+	return &domain.Subscription{
+		ID: subscriptionID,
+		Location: domain.Location{
+			Name:        e.LocationName,
+			Coordinates: domain.Coordinates{Latitude: e.Coordinates.Lat, Longitude: e.Coordinates.Lng},
+		},
+		Notification: domain.Notification{
+			SlackWebhookURL: e.SlackWebhookURL,
+		},
+	}, nil
+}
+
 func (r *SubscriptionRepository) FindByUserID(ctx context.Context, userID domain.UserID) ([]domain.Subscription, error) {
 	q := datastore.NewQuery(subscriptionKind).Ancestor(newUserKey(ctx, userID))
 	var entities []subscriptionEntity

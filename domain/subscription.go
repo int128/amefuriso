@@ -23,3 +23,17 @@ func NewSubscription(location Location) Subscription {
 		Location: location,
 	}
 }
+
+type ErrNoSuchSubscription struct {
+	UserID         UserID
+	SubscriptionID SubscriptionID
+}
+
+func (e ErrNoSuchSubscription) Error() string {
+	return fmt.Sprintf("No such subscription UserID=%s, SubscriptionID=%s", e.UserID, e.SubscriptionID)
+}
+
+func IsErrNoSuchSubscription(err error) bool {
+	_, ok := err.(ErrNoSuchSubscription)
+	return ok
+}

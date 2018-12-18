@@ -38,13 +38,12 @@ func (r *UserRepository) FindAll(ctx context.Context) ([]domain.User, error) {
 	return ret, nil
 }
 
-// TODO: not used
 func (r *UserRepository) FindById(ctx context.Context, id domain.UserID) (*domain.User, error) {
 	k := newUserKey(ctx, id)
 	var e userEntity
 	if err := datastore.Get(ctx, k, &e); err != nil {
 		if err == datastore.ErrNoSuchEntity {
-			return nil, nil
+			return nil, domain.ErrNoSuchUser{ID: id}
 		}
 		return nil, errors.Wrapf(err, "error while getting entity")
 	}

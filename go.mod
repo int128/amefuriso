@@ -4,6 +4,7 @@ require (
 	github.com/go-test/deep v1.0.1
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
 	github.com/google/uuid v1.1.0
+	github.com/gorilla/mux v1.6.2
 	github.com/int128/go-yahoo-weather v1.0.1
 	github.com/int128/slack v1.2.0
 	github.com/llgcode/draw2d v0.0.0-20180825133448-f52c8a71aff0

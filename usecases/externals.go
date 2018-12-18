@@ -7,11 +7,13 @@ import (
 )
 
 type UserRepository interface {
+	FindById(ctx context.Context, id domain.UserID) (*domain.User, error)
 	FindAll(ctx context.Context) ([]domain.User, error)
 	Save(ctx context.Context, user domain.User) error
 }
 
 type SubscriptionRepository interface {
+	FindBySubscriptionID(ctx context.Context, userID domain.UserID, subscriptionID domain.SubscriptionID) (*domain.Subscription, error)
 	FindByUserID(ctx context.Context, userID domain.UserID) ([]domain.Subscription, error)
 	Save(ctx context.Context, userID domain.UserID, subscriptions []domain.Subscription) error
 }

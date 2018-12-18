@@ -9,6 +9,51 @@ import (
 	"testing"
 )
 
+func TestSubscriptionRepository_FindBySubscriptionID(t *testing.T) {
+	ctx, shutdown, err := aetest.NewContext()
+	if err != nil {
+		t.Fatalf("error while initializing context: %s", err)
+	}
+	defer shutdown()
+	var r SubscriptionRepository
+
+	t.Run("ExactOne", func(t *testing.T) {
+		if _, err := datastore.Put(ctx,
+			newSubscriptionKey(ctx, "USER2", "SUBSCRIPTION1"),
+			&subscriptionEntity{
+				LocationName: "Tokyo",
+				Coordinates:  appengine.GeoPoint{Lat: 35.663613, Lng: 139.732293},
+			}); err != nil {
+			t.Fatalf("error while saving subscription: %s", err)
+		}
+
+		subscription, err := r.FindBySubscriptionID(ctx, "USER2", "SUBSCRIPTION1")
+		if err != nil {
+			t.Fatalf("error while finding subscriptions: %s", err)
+		}
+		want := &domain.Subscription{
+			ID: "SUBSCRIPTION1",
+			Location: domain.Location{
+				Name:        "Tokyo",
+				Coordinates: domain.Coordinates{Latitude: 35.663613, Longitude: 139.732293},
+			},
+		}
+		if diff := deep.Equal(want, subscription); diff != nil {
+			t.Error(diff)
+		}
+	})
+
+	t.Run("NotFound", func(t *testing.T) {
+		subscription, err := r.FindBySubscriptionID(ctx, "USER2", "SUBSCRIPTION2")
+		if subscription != nil {
+			t.Errorf("subscription wants nil but %+v", subscription)
+		}
+		if !domain.IsErrNoSuchSubscription(err) {
+			t.Errorf("IsErrNoSuchSubscription(error) wants true but false: err=%+v", err)
+		}
+	})
+}
+
 func TestSubscriptionRepository_FindByUserID_empty(t *testing.T) {
 	ctx, shutdown, err := aetest.NewContext()
 	if err != nil {
