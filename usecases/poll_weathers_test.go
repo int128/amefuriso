@@ -12,12 +12,17 @@ import (
 
 func TestPollWeathers_Do_WithoutNotification(t *testing.T) {
 	ctx := context.Background()
-	imageURLProvider := func(id domain.ImageID) string {
-		return "/" + string(id)
-	}
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
+	urlProviders := URLProviders{
+		ImageURLProvider: func(id domain.ImageID) string {
+			return "/" + string(id)
+		},
+		WeatherURLProvider: func(userID domain.UserID, subscriptionID domain.SubscriptionID) string {
+			return "/" + string(userID) + "/" + string(subscriptionID) + "/weather"
+		},
+	}
 	userRepository := mock_externals.NewMockUserRepository(ctrl)
 	userRepository.EXPECT().FindAll(ctx).Return([]domain.User{
 		{
@@ -49,7 +54,7 @@ func TestPollWeathers_Do_WithoutNotification(t *testing.T) {
 		WeatherService:         weatherService,
 	}
 
-	if err := usecase.Do(ctx, imageURLProvider); err != nil {
+	if err := usecase.Do(ctx, urlProviders); err != nil {
 		t.Fatalf("Do returned error: %s", err)
 	}
 }

@@ -35,6 +35,12 @@ func getImageURLFunc(r *http.Request) usecases.ImageURLProvider {
 	}
 }
 
+func getWeatherURLFunc(r *http.Request) usecases.WeatherURLProvider {
+	return func(userID domain.UserID, subscriptionID domain.SubscriptionID) string {
+		return baseURL(r) + fmt.Sprintf("/%s/%s/weather", userID, subscriptionID)
+	}
+}
+
 func baseURL(r *http.Request) string {
 	scheme := "http"
 	if r.Header.Get("X-AppEngine-Https") == "on" {

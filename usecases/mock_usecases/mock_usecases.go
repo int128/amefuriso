@@ -108,7 +108,7 @@ func (m *MockIPollWeathers) EXPECT() *MockIPollWeathersMockRecorder {
 }
 
 // Do mocks base method
-func (m *MockIPollWeathers) Do(arg0 context.Context, arg1 usecases.ImageURLProvider) error {
+func (m *MockIPollWeathers) Do(arg0 context.Context, arg1 usecases.URLProviders) error {
 	ret := m.ctrl.Call(m, "Do", arg0, arg1)
 	ret0, _ := ret[0].(error)
 	return ret0

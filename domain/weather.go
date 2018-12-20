@@ -29,14 +29,24 @@ func (w Weather) IsRainingNow() bool {
 	return w.Observations[len(w.Observations)-1].Rainfall > 0
 }
 
-// WillRainLater returns true if forecast have positive.
-func (w Weather) WillRainLater() bool {
+// FindRainStarts returns the first positive event or nil.
+func (w Weather) FindRainStarts() *Event {
 	for _, event := range w.Forecasts {
 		if event.Rainfall > 0 {
-			return true
+			return &event
 		}
 	}
-	return false
+	return nil
+}
+
+// FindRainStops returns the first zero event or nil.
+func (w Weather) FindRainStops() *Event {
+	for _, event := range w.Forecasts {
+		if event.Rainfall == 0 {
+			return &event
+		}
+	}
+	return nil
 }
 
 type RainfallMilliMeterPerHour float64

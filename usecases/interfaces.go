@@ -17,7 +17,7 @@ type IGetImage interface {
 }
 
 type IPollWeathers interface {
-	Do(ctx context.Context, imageURL ImageURLProvider) error
+	Do(ctx context.Context, urlProviders URLProviders) error
 }
 
 type ISetup interface {
