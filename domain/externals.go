@@ -4,6 +4,8 @@ import (
 	"context"
 )
 
+//go:generate mockgen -destination mock_externals/mock_externals.go -package mock_externals github.com/int128/amefurisobot/domain UserRepository,SubscriptionRepository,PNGRepository,WeatherService,NotificationService
+
 type UserRepository interface {
 	FindById(ctx context.Context, id UserID) (*User, error)
 	FindAll(ctx context.Context) ([]User, error)

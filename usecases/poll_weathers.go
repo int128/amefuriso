@@ -25,7 +25,7 @@ func (u *PollWeathers) Do(ctx context.Context, imageURL ImageURLProvider) error 
 	}
 	for _, user := range users {
 		if err := u.doUser(ctx, user, imageURL); err != nil {
-			return errors.Wrapf(err, "error while polling weathers of user %s", user.ID)
+			return errors.Wrapf(err, "error while processing user %s", user.ID)
 		}
 	}
 	return nil
@@ -48,29 +48,36 @@ func (u *PollWeathers) doUser(ctx context.Context, user domain.User, imageURL Im
 		return errors.Wrapf(err, "error while getting weather")
 	}
 	for i, subscription := range subscriptions {
-		if subscription.Notification.IsZero() {
-			continue
-		}
 		weather := weathers[i]
-		if !weather.IsRainingNow() && !weather.WillRainLater() {
-			continue
+		if err := u.doSubscription(ctx, user, subscription, weather, imageURL); err != nil {
+			return errors.Wrapf(err, "error while processing user %s subscription %s", user.ID, subscription.ID)
 		}
+	}
+	return nil
+}
 
-		b, err := chart.DrawPNG(weather)
-		if err != nil {
-			return errors.Wrapf(err, "error while drawing rainfall chart")
-		}
-		image := domain.NewPNGImage(b)
-		if err := u.PNGRepository.Save(ctx, image); err != nil {
-			return errors.Wrapf(err, "error while saving the image")
-		}
-		message := domain.Message{
-			Text:     weather.Location.Name,
-			ImageURL: imageURL(image.ID),
-		}
-		if err := u.NotificationService.Send(ctx, subscription.Notification, message); err != nil {
-			return errors.Wrapf(err, "error while sending the message")
-		}
+func (u *PollWeathers) doSubscription(ctx context.Context, user domain.User, subscription domain.Subscription, weather domain.Weather, imageURL ImageURLProvider) error {
+	if subscription.Notification.IsZero() {
+		return nil
+	}
+	if !weather.IsRainingNow() && !weather.WillRainLater() {
+		return nil
+	}
+
+	b, err := chart.DrawPNG(weather)
+	if err != nil {
+		return errors.Wrapf(err, "error while drawing rainfall chart")
+	}
+	image := domain.NewPNGImage(b)
+	if err := u.PNGRepository.Save(ctx, image); err != nil {
+		return errors.Wrapf(err, "error while saving the image")
+	}
+	message := domain.Message{
+		Text:     weather.Location.Name,
+		ImageURL: imageURL(image.ID),
+	}
+	if err := u.NotificationService.Send(ctx, subscription.Notification, message); err != nil {
+		return errors.Wrapf(err, "error while sending the message")
 	}
 	return nil
 }
