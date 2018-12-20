@@ -11,12 +11,12 @@ type ContextProvider func(*http.Request) context.Context
 
 type Handlers struct {
 	GetWeather   GetWeather
-	GetPNGImage  GetPNGImage
+	GetPNGImage  GetImage
 	PollWeathers PollWeathers
 	Setup        Setup
 }
 
-func NewRouter(h Handlers) http.Handler {
+func (h *Handlers) NewRouter() http.Handler {
 	m := mux.NewRouter()
 	m.Path("/{userID}/{subscriptionID}/weather").Methods("GET").Handler(&h.GetWeather)
 	m.Path("/png").Methods("GET").Handler(&h.GetPNGImage)

@@ -15,7 +15,7 @@ func contextProvider(req *http.Request) context.Context {
 }
 
 func main() {
-	r := handlers.NewRouter(handlers.Handlers{
+	h := handlers.Handlers{
 		GetWeather: handlers.GetWeather{
 			ContextProvider: contextProvider,
 			Usecase: &usecases.GetWeather{
@@ -24,9 +24,9 @@ func main() {
 				WeatherService:         &externals.WeatherService{},
 			},
 		},
-		GetPNGImage: handlers.GetPNGImage{
+		GetPNGImage: handlers.GetImage{
 			ContextProvider: contextProvider,
-			Usecase: &usecases.GetPNGImage{
+			Usecase: &usecases.GetImage{
 				PNGRepository: &externals.PNGRepository{},
 			},
 		},
@@ -47,7 +47,7 @@ func main() {
 				UserRepository:         &externals.UserRepository{},
 			},
 		},
-	})
-	http.Handle("/", r)
+	}
+	http.Handle("/", h.NewRouter())
 	appengine.Main()
 }

@@ -1,20 +1,15 @@
 package handlers
 
 import (
-	"context"
 	"fmt"
-	"github.com/int128/amefurisobot/domain"
+	"github.com/int128/amefurisobot/usecases"
 	"google.golang.org/appengine/log"
 	"net/http"
 )
 
-type SetupUsecase interface {
-	Do(ctx context.Context) (*domain.User, error)
-}
-
 type Setup struct {
 	ContextProvider ContextProvider
-	Usecase         SetupUsecase
+	Usecase         usecases.ISetup
 }
 
 func (h *Setup) ServeHTTP(w http.ResponseWriter, req *http.Request) {

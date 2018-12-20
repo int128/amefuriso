@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"context"
 	"fmt"
 	"github.com/int128/amefurisobot/domain"
 	"github.com/int128/amefurisobot/usecases"
@@ -9,13 +8,9 @@ import (
 	"net/http"
 )
 
-type PollWeathersUsecase interface {
-	Do(ctx context.Context, imageURL usecases.ImageURLProvider) error
-}
-
 type PollWeathers struct {
 	ContextProvider ContextProvider
-	Usecase         PollWeathersUsecase
+	Usecase         usecases.IPollWeathers
 }
 
 func (h *PollWeathers) ServeHTTP(w http.ResponseWriter, req *http.Request) {

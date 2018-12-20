@@ -1,23 +1,19 @@
 package handlers
 
 import (
-	"context"
+	"github.com/int128/amefurisobot/usecases"
 	"net/http"
 
 	"github.com/int128/amefurisobot/domain"
 	"google.golang.org/appengine/log"
 )
 
-type GetPNGImageUsecase interface {
-	Do(ctx context.Context, id domain.ImageID) (*domain.Image, error)
-}
-
-type GetPNGImage struct {
+type GetImage struct {
 	ContextProvider ContextProvider
-	Usecase         GetPNGImageUsecase
+	Usecase         usecases.IGetImage
 }
 
-func (h *GetPNGImage) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+func (h *GetImage) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	id := req.URL.Query().Get("id")
 	if id == "" {
 		http.Error(w, "missing parameter", 400)
