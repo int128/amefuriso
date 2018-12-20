@@ -57,7 +57,8 @@ func (u *PollWeathers) doUser(ctx context.Context, user domain.User, imageURL Im
 }
 
 func (u *PollWeathers) doSubscription(ctx context.Context, user domain.User, subscription domain.Subscription, weather domain.Weather, imageURL ImageURLProvider) error {
-	if subscription.Notification.IsZero() {
+	publication := subscription.Publication
+	if publication.IsZero() {
 		return nil
 	}
 	if !weather.IsRainingNow() && !weather.WillRainLater() {
@@ -76,7 +77,7 @@ func (u *PollWeathers) doSubscription(ctx context.Context, user domain.User, sub
 		Text:     weather.Location.Name,
 		ImageURL: imageURL(image.ID),
 	}
-	if err := u.NotificationService.Send(ctx, subscription.Notification, message); err != nil {
+	if err := u.NotificationService.Send(ctx, publication, message); err != nil {
 		return errors.Wrapf(err, "error while sending the message")
 	}
 	return nil

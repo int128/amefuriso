@@ -1,9 +1,9 @@
 package domain
 
-type Notification struct {
+type Publication struct {
 	SlackWebhookURL string
 }
 
-func (s Notification) IsZero() bool {
+func (s Publication) IsZero() bool {
 	return s.SlackWebhookURL == ""
 }

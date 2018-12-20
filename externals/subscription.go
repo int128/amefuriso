@@ -38,7 +38,7 @@ func (r *SubscriptionRepository) FindBySubscriptionID(ctx context.Context, userI
 			Name:        e.LocationName,
 			Coordinates: domain.Coordinates{Latitude: e.Coordinates.Lat, Longitude: e.Coordinates.Lng},
 		},
-		Notification: domain.Notification{
+		Publication: domain.Publication{
 			SlackWebhookURL: e.SlackWebhookURL,
 		},
 	}, nil
@@ -59,7 +59,7 @@ func (r *SubscriptionRepository) FindByUserID(ctx context.Context, userID domain
 				Name:        e.LocationName,
 				Coordinates: domain.Coordinates{Latitude: e.Coordinates.Lat, Longitude: e.Coordinates.Lng},
 			},
-			Notification: domain.Notification{
+			Publication: domain.Publication{
 				SlackWebhookURL: e.SlackWebhookURL,
 			},
 		})
@@ -84,7 +84,7 @@ func (r *SubscriptionRepository) Save(ctx context.Context, userID domain.UserID,
 				Lat: subscription.Location.Coordinates.Latitude,
 				Lng: subscription.Location.Coordinates.Longitude,
 			},
-			SlackWebhookURL: subscription.Notification.SlackWebhookURL,
+			SlackWebhookURL: subscription.Publication.SlackWebhookURL,
 		}
 		keys = append(keys, k)
 		entities = append(entities, &e)

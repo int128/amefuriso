@@ -11,10 +11,10 @@ import (
 
 type NotificationService struct{}
 
-func (s *NotificationService) Send(ctx context.Context, destination domain.Notification, message domain.Message) error {
+func (s *NotificationService) Send(ctx context.Context, publication domain.Publication, message domain.Message) error {
 	c := slack.Client{
 		HTTPClient: urlfetch.Client(ctx),
-		WebhookURL: destination.SlackWebhookURL,
+		WebhookURL: publication.SlackWebhookURL,
 	}
 	err := c.Send(&slack.Message{
 		Attachments: []slack.Attachment{{

@@ -2,13 +2,14 @@ package domain
 
 import (
 	"fmt"
+
 	"github.com/google/uuid"
 )
 
 type Subscription struct {
-	ID           SubscriptionID
-	Location     Location
-	Notification Notification
+	ID          SubscriptionID
+	Location    Location
+	Publication Publication
 }
 
 func (subscription Subscription) String() string {

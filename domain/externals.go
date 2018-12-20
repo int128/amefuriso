@@ -35,5 +35,5 @@ type WeatherService interface {
 }
 
 type NotificationService interface {
-	Send(ctx context.Context, destination Notification, message Message) error
+	Send(ctx context.Context, publication Publication, message Message) error
 }
