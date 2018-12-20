@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"github.com/gorilla/mux"
 	"github.com/int128/amefurisobot/usecases"
 	"net/http"
 
@@ -14,14 +15,11 @@ type GetImage struct {
 }
 
 func (h *GetImage) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	id := req.URL.Query().Get("id")
-	if id == "" {
-		http.Error(w, "missing parameter", 400)
-		return
-	}
+	v := mux.Vars(req)
+	id := domain.ImageID(v["ID"])
 
 	ctx := h.ContextProvider(req)
-	image, err := h.Usecase.Do(ctx, domain.ImageID(id))
+	image, err := h.Usecase.Do(ctx, id)
 	if err != nil {
 		if domain.IsErrNoSuchImage(err) {
 			http.Error(w, "not found", 404)

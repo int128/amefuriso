@@ -24,7 +24,7 @@ func main() {
 				WeatherService:         &externals.WeatherService{},
 			},
 		},
-		GetPNGImage: handlers.GetImage{
+		GetImage: handlers.GetImage{
 			ContextProvider: contextProvider,
 			Usecase: &usecases.GetImage{
 				PNGRepository: &externals.PNGRepository{},

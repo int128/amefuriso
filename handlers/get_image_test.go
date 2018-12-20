@@ -10,19 +10,19 @@ import (
 	"github.com/int128/amefurisobot/usecases/mock_usecases"
 )
 
-func TestGetWeather_ServeHTTP(t *testing.T) {
+func TestGetImage_ServeHTTP(t *testing.T) {
 	ctx := context.Background()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	usecase := mock_usecases.NewMockIGetWeather(ctrl)
+	usecase := mock_usecases.NewMockIGetImage(ctrl)
 	usecase.EXPECT().
-		Do(ctx, domain.UserID("USER1"), domain.SubscriptionID("SUBSCRIPTION1")).
-		Return(&domain.Weather{}, nil)
+		Do(ctx, domain.ImageID("FOO")).
+		Return(&domain.Image{ContentType: "image/png"}, nil)
 
-	req := httptest.NewRequest("GET", "/USER1/SUBSCRIPTION1/weather", nil)
+	req := httptest.NewRequest("GET", "/images/FOO.png", nil)
 	w := httptest.NewRecorder()
-	h := Handlers{GetWeather: GetWeather{contextProvider(ctx), usecase}}
+	h := Handlers{GetImage: GetImage{contextProvider(ctx), usecase}}
 	h.NewRouter().ServeHTTP(w, req)
 
 	if w.Code != 200 {
@@ -34,22 +34,22 @@ func TestGetWeather_ServeHTTP(t *testing.T) {
 	}
 }
 
-func TestGetWeather_ServeHTTP_NotFound(t *testing.T) {
+func TestGetImage_ServeHTTP_NotFound(t *testing.T) {
 	ctx := context.Background()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	usecase := mock_usecases.NewMockIGetWeather(ctrl)
+	usecase := mock_usecases.NewMockIGetImage(ctrl)
 	usecase.EXPECT().
-		Do(ctx, domain.UserID("USER1"), domain.SubscriptionID("SUBSCRIPTION1")).
-		Return(nil, domain.ErrNoSuchUser{ID: "USER1"})
+		Do(ctx, domain.ImageID("FOO")).
+		Return(nil, domain.ErrNoSuchImage{ID: domain.ImageID("FOO")})
 
-	req := httptest.NewRequest("GET", "/USER1/SUBSCRIPTION1/weather", nil)
+	req := httptest.NewRequest("GET", "/images/FOO.png", nil)
 	w := httptest.NewRecorder()
-	h := Handlers{GetWeather: GetWeather{contextProvider(ctx), usecase}}
+	h := Handlers{GetImage: GetImage{contextProvider(ctx), usecase}}
 	h.NewRouter().ServeHTTP(w, req)
 
 	if w.Code != 404 {
-		t.Errorf("Code wants 404 but %v", w.Code)
+		t.Errorf("Code wants 200 but %v", w.Code)
 	}
 }
