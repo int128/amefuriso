@@ -19,6 +19,7 @@ func (s *NotificationService) Send(ctx context.Context, publication domain.Publi
 	err := c.Send(&slack.Message{
 		Attachments: []slack.Attachment{{
 			Text:     message.Text,
+			Fallback: message.Text,
 			ImageURL: message.ImageURL,
 		}},
 	})
