@@ -35,7 +35,7 @@ func TestPollWeathers_Do_WithoutNotification(t *testing.T) {
 	}, nil)
 	weatherService := mock_externals.NewMockWeatherService(ctrl)
 	weatherService.EXPECT().
-		Get(ctx, domain.YahooClientID("CLIENT1"), []domain.Location{testdata.TokyoLocation}).
+		Get(ctx, domain.YahooClientID("CLIENT1"), []domain.Location{testdata.TokyoLocation}, domain.NoObservation).
 		Return([]domain.Weather{
 			{
 				Location:            testdata.TokyoLocation,

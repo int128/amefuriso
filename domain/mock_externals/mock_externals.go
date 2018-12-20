@@ -205,16 +205,16 @@ func (m *MockWeatherService) EXPECT() *MockWeatherServiceMockRecorder {
 }
 
 // Get mocks base method
-func (m *MockWeatherService) Get(arg0 context.Context, arg1 domain.YahooClientID, arg2 []domain.Location) ([]domain.Weather, error) {
-	ret := m.ctrl.Call(m, "Get", arg0, arg1, arg2)
+func (m *MockWeatherService) Get(arg0 context.Context, arg1 domain.YahooClientID, arg2 []domain.Location, arg3 domain.ObservationOption) ([]domain.Weather, error) {
+	ret := m.ctrl.Call(m, "Get", arg0, arg1, arg2, arg3)
 	ret0, _ := ret[0].([]domain.Weather)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Get indicates an expected call of Get
-func (mr *MockWeatherServiceMockRecorder) Get(arg0, arg1, arg2 interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockWeatherService)(nil).Get), arg0, arg1, arg2)
+func (mr *MockWeatherServiceMockRecorder) Get(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockWeatherService)(nil).Get), arg0, arg1, arg2, arg3)
 }
 
 // MockNotificationService is a mock of NotificationService interface

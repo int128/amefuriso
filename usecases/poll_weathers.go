@@ -43,7 +43,7 @@ func (u *PollWeathers) doUser(ctx context.Context, user domain.User, imageURL Im
 	for _, subscription := range subscriptions {
 		locations = append(locations, subscription.Location)
 	}
-	weathers, err := u.WeatherService.Get(ctx, user.YahooClientID, locations)
+	weathers, err := u.WeatherService.Get(ctx, user.YahooClientID, locations, domain.NoObservation)
 	if err != nil {
 		return errors.Wrapf(err, "error while getting weather")
 	}

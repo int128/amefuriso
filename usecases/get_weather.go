@@ -27,7 +27,7 @@ func (u *GetWeather) Do(ctx context.Context, userID domain.UserID, subscriptionI
 		}
 		return nil, errors.Wrapf(err, "error while finding subscription")
 	}
-	weathers, err := u.WeatherService.Get(ctx, user.YahooClientID, []domain.Location{subscription.Location})
+	weathers, err := u.WeatherService.Get(ctx, user.YahooClientID, []domain.Location{subscription.Location}, domain.OneHourObservation)
 	if err != nil {
 		return nil, errors.Wrapf(err, "error while fetching weather")
 	}

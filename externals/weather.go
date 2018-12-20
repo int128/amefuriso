@@ -3,6 +3,7 @@ package externals
 import (
 	"context"
 	"fmt"
+
 	"google.golang.org/appengine/urlfetch"
 
 	"github.com/int128/amefurisobot/domain"
@@ -12,10 +13,10 @@ import (
 
 type WeatherService struct{}
 
-func (s *WeatherService) Get(ctx context.Context, clientID domain.YahooClientID, locations []domain.Location) ([]domain.Weather, error) {
+func (s *WeatherService) Get(ctx context.Context, clientID domain.YahooClientID, locations []domain.Location, observationOption domain.ObservationOption) ([]domain.Weather, error) {
 	req := weather.Request{
 		IntervalMinutes: 5,
-		PastHours:       1,
+		PastHours:       int(observationOption),
 	}
 	for _, location := range locations {
 		req.Coordinates = append(req.Coordinates, weather.Coordinates{

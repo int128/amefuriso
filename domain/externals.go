@@ -23,8 +23,15 @@ type PNGRepository interface {
 	Save(ctx context.Context, image Image) error
 }
 
+type ObservationOption int
+
+const (
+	NoObservation      = ObservationOption(0)
+	OneHourObservation = ObservationOption(1)
+)
+
 type WeatherService interface {
-	Get(ctx context.Context, clientID YahooClientID, locations []Location) ([]Weather, error)
+	Get(ctx context.Context, clientID YahooClientID, locations []Location, observationOption ObservationOption) ([]Weather, error)
 }
 
 type NotificationService interface {
