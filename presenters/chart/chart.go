@@ -47,7 +47,7 @@ var (
 )
 
 func Draw(w domain.Weather) image.Image {
-	canvasHeight := boxTop + barHeight*float64(len(w.RainfallObservation)+len(w.RainfallForecast)) + boxBottom
+	canvasHeight := boxTop + barHeight*float64(len(w.Observations)+len(w.Forecasts)) + boxBottom
 	img := image.NewRGBA(image.Rect(0, 0, canvasWidth, int(canvasHeight)))
 	gc := draw2dimg.NewGraphicContext(img)
 	gc.SetFontData(regularFont)
@@ -56,9 +56,9 @@ func Draw(w domain.Weather) image.Image {
 	drawAxis(gc, canvasHeight-boxTop-boxBottom)
 
 	gc.Translate(0, boxTop)
-	drawRainfalls(gc, w.RainfallObservation, observationColor)
-	gc.Translate(0, barHeight*float64(len(w.RainfallObservation)))
-	drawRainfalls(gc, w.RainfallForecast, forecastColor)
+	drawRainfalls(gc, w.Observations, observationColor)
+	gc.Translate(0, barHeight*float64(len(w.Observations)))
+	drawRainfalls(gc, w.Forecasts, forecastColor)
 
 	return img
 }
@@ -88,17 +88,17 @@ func drawAxis(gc *draw2dimg.GraphicContext, boxHeight float64) {
 	gc.FillStroke()
 }
 
-func drawRainfalls(gc *draw2dimg.GraphicContext, rainfalls []domain.Rainfall, barColor color.Color) {
-	for i, rainfall := range rainfalls {
-		barWidth := float64(rainfall.Amount) * barScale
+func drawRainfalls(gc *draw2dimg.GraphicContext, events []domain.Event, barColor color.Color) {
+	for i, event := range events {
+		barWidth := float64(event.Rainfall) * barScale
 		y := float64(i) * barHeight
 		baseline := y + barHeight*3/4
 
 		gc.SetFillColor(color.Black)
-		gc.FillStringAt(rainfall.Time.Format("15:04"), labelLeft, baseline)
-		if rainfall.Amount > 0 {
+		gc.FillStringAt(event.Time.Format("15:04"), labelLeft, baseline)
+		if event.Rainfall > 0 {
 			x := math.Min(boxLeft+barWidth+10, boxLeft+boxWidth)
-			gc.FillStringAt(fmt.Sprintf("%.2f mm/h", rainfall.Amount), x, baseline)
+			gc.FillStringAt(fmt.Sprintf("%.2f mm/h", event.Rainfall), x, baseline)
 		}
 
 		gc.SetFillColor(barColor)

@@ -7,7 +7,7 @@ require (
 	github.com/golang/mock v1.2.0
 	github.com/google/uuid v1.1.0
 	github.com/gorilla/mux v1.6.2
-	github.com/int128/go-yahoo-weather v1.0.1
+	github.com/int128/go-yahoo-weather v1.1.1
 	github.com/int128/slack v1.2.0
 	github.com/llgcode/draw2d v0.0.0-20180825133448-f52c8a71aff0
 	github.com/pkg/errors v0.8.0

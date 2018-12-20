@@ -2,7 +2,6 @@ package externals
 
 import (
 	"context"
-	"fmt"
 
 	"google.golang.org/appengine/urlfetch"
 
@@ -29,44 +28,31 @@ func (s *WeatherService) Get(ctx context.Context, clientID domain.YahooClientID,
 	if err != nil {
 		return nil, errors.Wrapf(err, "error while getting weather")
 	}
-	return weatherAdaptor(resp, locations)
+	weathers, err := weather.Parse(resp)
+	if err != nil {
+		return nil, errors.Wrapf(err, "error while parsing weather response")
+	}
+	return weatherAdaptor(weathers, locations), nil
 }
 
-func weatherAdaptor(resp *weather.Response, locations []domain.Location) ([]domain.Weather, error) {
+func weatherAdaptor(weathers []weather.Weather, locations []domain.Location) []domain.Weather {
 	results := make([]domain.Weather, 0)
-	for i, respFeature := range resp.Body.Feature {
-		c, err := respFeature.Geometry.Coordinates.Parse()
-		if err != nil {
-			return nil, fmt.Errorf("invalid coordinates: %s", err)
-		}
+	for i, w := range weathers {
 		result := domain.Weather{
-			Location: domain.Location{
-				Name: locations[i].Name,
-				Coordinates: domain.Coordinates{
-					Latitude:  c.Latitude,
-					Longitude: c.Longitude,
-				},
-			},
+			Location: locations[i],
 		}
-		for _, respWeather := range respFeature.Property.WeatherList.Weather {
-			t, err := respWeather.Date.Parse()
-			if err != nil {
-				return nil, fmt.Errorf("invalid date: %s", err)
+		for _, event := range w.Events {
+			rainfall := domain.Event{
+				Time:     event.Time,
+				Rainfall: domain.RainfallMilliMeterPerHour(event.Rainfall),
 			}
-			rainfall := domain.Rainfall{
-				Time:   t,
-				Amount: domain.RainfallMilliMeterPerHour(respWeather.Rainfall),
-			}
-			switch respWeather.Type {
-			case "observation":
-				result.RainfallObservation = append(result.RainfallObservation, rainfall)
-			case "forecast":
-				result.RainfallForecast = append(result.RainfallForecast, rainfall)
-			default:
-				return nil, fmt.Errorf("unknown weather type: %s", respWeather.Type)
+			if event.Forecast {
+				result.Forecasts = append(result.Forecasts, rainfall)
+			} else {
+				result.Observations = append(result.Observations, rainfall)
 			}
 		}
 		results = append(results, result)
 	}
-	return results, nil
+	return results
 }

@@ -38,9 +38,9 @@ func TestPollWeathers_Do_WithoutNotification(t *testing.T) {
 		Get(ctx, domain.YahooClientID("CLIENT1"), []domain.Location{testdata.TokyoLocation}, domain.NoObservation).
 		Return([]domain.Weather{
 			{
-				Location:            testdata.TokyoLocation,
-				RainfallObservation: []domain.Rainfall{},
-				RainfallForecast:    []domain.Rainfall{},
+				Location:     testdata.TokyoLocation,
+				Observations: []domain.Event{},
+				Forecasts:    []domain.Event{},
 			},
 		}, nil)
 	usecase := PollWeathers{
