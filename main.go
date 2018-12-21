@@ -2,11 +2,11 @@ package main
 
 import (
 	"context"
-	"github.com/int128/amefurisobot/externals"
-	"github.com/int128/amefurisobot/usecases"
 	"net/http"
 
+	"github.com/int128/amefurisobot/gateways"
 	"github.com/int128/amefurisobot/handlers"
+	"github.com/int128/amefurisobot/usecases"
 	"google.golang.org/appengine"
 )
 
@@ -19,32 +19,32 @@ func main() {
 		GetWeather: handlers.GetWeather{
 			ContextProvider: contextProvider,
 			Usecase: &usecases.GetWeather{
-				UserRepository:         &externals.UserRepository{},
-				SubscriptionRepository: &externals.SubscriptionRepository{},
-				WeatherService:         &externals.WeatherService{},
+				UserRepository:         &gateways.UserRepository{},
+				SubscriptionRepository: &gateways.SubscriptionRepository{},
+				WeatherService:         &gateways.WeatherService{},
 			},
 		},
 		GetImage: handlers.GetImage{
 			ContextProvider: contextProvider,
 			Usecase: &usecases.GetImage{
-				PNGRepository: &externals.PNGRepository{},
+				PNGRepository: &gateways.PNGRepository{},
 			},
 		},
 		PollWeathers: handlers.PollWeathers{
 			ContextProvider: contextProvider,
 			Usecase: &usecases.PollWeathers{
-				UserRepository:         &externals.UserRepository{},
-				SubscriptionRepository: &externals.SubscriptionRepository{},
-				PNGRepository:          &externals.PNGRepository{},
-				WeatherService:         &externals.WeatherService{},
-				NotificationService:    &externals.NotificationService{},
+				UserRepository:         &gateways.UserRepository{},
+				SubscriptionRepository: &gateways.SubscriptionRepository{},
+				PNGRepository:          &gateways.PNGRepository{},
+				WeatherService:         &gateways.WeatherService{},
+				NotificationService:    &gateways.NotificationService{},
 			},
 		},
 		Setup: handlers.Setup{
 			ContextProvider: contextProvider,
 			Usecase: &usecases.Setup{
-				SubscriptionRepository: &externals.SubscriptionRepository{},
-				UserRepository:         &externals.UserRepository{},
+				SubscriptionRepository: &gateways.SubscriptionRepository{},
+				UserRepository:         &gateways.UserRepository{},
 			},
 		},
 	}
