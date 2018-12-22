@@ -81,7 +81,7 @@ func (u *PollWeathers) doSubscription(ctx context.Context, user domain.User, sub
 		return errors.Wrapf(err, "error while saving the image")
 	}
 	msg := domain.Message{
-		Text:     message.Format(weather, urlProviders.WeatherURLProvider(user.ID, subscription.ID)),
+		Text:     message.Format(forecastMessage, urlProviders.WeatherURLProvider(user.ID, subscription.ID)),
 		ImageURL: urlProviders.ImageURLProvider(image.ID),
 	}
 	if err := u.NotificationService.Send(ctx, publication, msg); err != nil {
