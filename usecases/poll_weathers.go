@@ -63,8 +63,8 @@ func (u *PollWeathers) doUser(ctx context.Context, user domain.User, urlProvider
 }
 
 func (u *PollWeathers) doSubscription(ctx context.Context, user domain.User, subscription domain.Subscription, weather domain.Weather, urlProviders URLProviders) error {
-	publication := subscription.Publication
-	if publication.IsZero() {
+	recipient := subscription.Recipient
+	if recipient.IsZero() {
 		return nil
 	}
 	forecastMessage := domain.NewForecastMessage(weather)
@@ -84,7 +84,7 @@ func (u *PollWeathers) doSubscription(ctx context.Context, user domain.User, sub
 		Text:     message.Format(forecastMessage, urlProviders.WeatherURLProvider(user.ID, subscription.ID)),
 		ImageURL: urlProviders.ImageURLProvider(image.ID),
 	}
-	if err := u.NotificationService.Send(ctx, publication, msg); err != nil {
+	if err := u.NotificationService.Send(ctx, recipient, msg); err != nil {
 		return errors.Wrapf(err, "error while sending the message")
 	}
 	return nil

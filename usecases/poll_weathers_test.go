@@ -33,9 +33,9 @@ func TestPollWeathers_Do_WithoutNotification(t *testing.T) {
 	subscriptionRepository := mock_gateways.NewMockSubscriptionRepository(ctrl)
 	subscriptionRepository.EXPECT().FindByUserID(ctx, domain.UserID("USER1")).Return([]domain.Subscription{
 		{
-			ID:          "SUBSCRIPTION1",
-			Location:    testdata.TokyoLocation,
-			Publication: domain.Publication{ /* NONE */ },
+			ID:        "SUBSCRIPTION1",
+			Location:  testdata.TokyoLocation,
+			Recipient: domain.Recipient{ /* NONE */ },
 		},
 	}, nil)
 	weatherService := mock_gateways.NewMockWeatherService(ctrl)

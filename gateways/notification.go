@@ -12,8 +12,8 @@ type NotificationService struct {
 	Client SlackClient
 }
 
-func (s *NotificationService) Send(ctx context.Context, publication domain.Publication, message domain.Message) error {
-	err := s.Client.Send(ctx, publication.SlackWebhookURL, slack.Message{
+func (s *NotificationService) Send(ctx context.Context, recipient domain.Recipient, message domain.Message) error {
+	err := s.Client.Send(ctx, recipient.SlackWebhookURL, slack.Message{
 		Attachments: []slack.Attachment{{
 			Text:     message.Text,
 			Fallback: message.Text,

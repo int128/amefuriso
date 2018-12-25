@@ -7,9 +7,9 @@ import (
 )
 
 type Subscription struct {
-	ID          SubscriptionID
-	Location    Location
-	Publication Publication
+	ID        SubscriptionID
+	Location  Location
+	Recipient Recipient
 }
 
 func (subscription Subscription) String() string {

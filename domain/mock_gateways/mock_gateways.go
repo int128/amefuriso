@@ -241,7 +241,7 @@ func (m *MockNotificationService) EXPECT() *MockNotificationServiceMockRecorder 
 }
 
 // Send mocks base method
-func (m *MockNotificationService) Send(arg0 context.Context, arg1 domain.Publication, arg2 domain.Message) error {
+func (m *MockNotificationService) Send(arg0 context.Context, arg1 domain.Recipient, arg2 domain.Message) error {
 	ret := m.ctrl.Call(m, "Send", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
