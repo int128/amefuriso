@@ -1,7 +1,11 @@
 steps:
   - name: gcr.io/cloud-builders/gcloud
+    env:
+      - TAG_NAME=$TAG_NAME
+    entrypoint: bash
     args:
-      - app
-      - deploy
+      - -c
+      - |
+        gcloud app deploy --version="${TAG_NAME//./-}"
 
-timeout: "1600s"
+timeout: "600s"
