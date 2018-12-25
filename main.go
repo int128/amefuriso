@@ -6,6 +6,7 @@ import (
 
 	"github.com/int128/amefurisobot/gateways"
 	"github.com/int128/amefurisobot/handlers"
+	"github.com/int128/amefurisobot/infrastructure"
 	"github.com/int128/amefurisobot/usecases"
 	"google.golang.org/appengine"
 )
@@ -21,7 +22,9 @@ func main() {
 			Usecase: &usecases.GetWeather{
 				UserRepository:         &gateways.UserRepository{},
 				SubscriptionRepository: &gateways.SubscriptionRepository{},
-				WeatherService:         &gateways.WeatherService{},
+				WeatherService: &gateways.WeatherService{
+					Client: &infrastructure.WeatherClient{},
+				},
 			},
 		},
 		GetImage: handlers.GetImage{
@@ -36,8 +39,12 @@ func main() {
 				UserRepository:         &gateways.UserRepository{},
 				SubscriptionRepository: &gateways.SubscriptionRepository{},
 				PNGRepository:          &gateways.PNGRepository{},
-				WeatherService:         &gateways.WeatherService{},
-				NotificationService:    &gateways.NotificationService{},
+				WeatherService: &gateways.WeatherService{
+					Client: &infrastructure.WeatherClient{},
+				},
+				NotificationService: &gateways.NotificationService{
+					Client: &infrastructure.SlackClient{},
+				},
 			},
 		},
 		Setup: handlers.Setup{

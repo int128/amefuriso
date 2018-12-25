@@ -3,14 +3,14 @@ package gateways
 import (
 	"context"
 
-	"google.golang.org/appengine/urlfetch"
-
 	"github.com/int128/amefurisobot/domain"
 	"github.com/int128/go-yahoo-weather/weather"
 	"github.com/pkg/errors"
 )
 
-type WeatherService struct{}
+type WeatherService struct {
+	Client WeatherClient
+}
 
 func (s *WeatherService) Get(ctx context.Context, clientID domain.YahooClientID, locations []domain.Location, observationOption domain.ObservationOption) ([]domain.Weather, error) {
 	req := weather.Request{
@@ -23,19 +23,10 @@ func (s *WeatherService) Get(ctx context.Context, clientID domain.YahooClientID,
 			Longitude: location.Coordinates.Longitude,
 		})
 	}
-	c := weather.Client{Client: urlfetch.Client(ctx), ClientID: string(clientID)}
-	resp, err := c.Get(&req)
+	weathers, err := s.Client.Get(ctx, string(clientID), req)
 	if err != nil {
 		return nil, errors.Wrapf(err, "error while getting weather")
 	}
-	weathers, err := weather.Parse(resp)
-	if err != nil {
-		return nil, errors.Wrapf(err, "error while parsing weather response")
-	}
-	return weatherAdaptor(weathers, locations), nil
-}
-
-func weatherAdaptor(weathers []weather.Weather, locations []domain.Location) []domain.Weather {
 	results := make([]domain.Weather, 0)
 	for i, w := range weathers {
 		result := domain.Weather{
@@ -54,5 +45,5 @@ func weatherAdaptor(weathers []weather.Weather, locations []domain.Location) []d
 		}
 		results = append(results, result)
 	}
-	return results
+	return results, nil
 }
