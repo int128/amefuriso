@@ -1,10 +1,12 @@
 package usecases
 
 import (
+	"bytes"
 	"context"
+	"image/png"
 
 	"github.com/int128/amefurisobot/domain"
-	"github.com/int128/amefurisobot/presenters/chart"
+	"github.com/int128/amefurisobot/domain/chart"
 	"github.com/pkg/errors"
 )
 
@@ -71,11 +73,12 @@ func (u *PollWeathers) doSubscription(ctx context.Context, user domain.User, sub
 		return nil
 	}
 
-	b, err := chart.DrawPNG(weather)
-	if err != nil {
-		return errors.Wrapf(err, "error while drawing rainfall chart")
+	weatherChart := chart.Draw(weather)
+	var b bytes.Buffer
+	if err := png.Encode(&b, weatherChart); err != nil {
+		return errors.Wrapf(err, "error while encoding PNG")
 	}
-	image := domain.NewPNGImage(b)
+	image := domain.NewPNGImage(b.Bytes())
 	if err := u.PNGRepository.Save(ctx, image); err != nil {
 		return errors.Wrapf(err, "error while saving the image")
 	}

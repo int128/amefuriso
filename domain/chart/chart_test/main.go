@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/int128/amefurisobot/domain"
-	"github.com/int128/amefurisobot/presenters/chart"
+	"github.com/int128/amefurisobot/domain/chart"
 	"github.com/int128/go-yahoo-weather/weather"
 	"github.com/llgcode/draw2d/draw2dimg"
 )

@@ -3,7 +3,7 @@ package handlers
 import (
 	"github.com/gorilla/mux"
 	"github.com/int128/amefurisobot/domain"
-	"github.com/int128/amefurisobot/presenters/chart"
+	"github.com/int128/amefurisobot/domain/chart"
 	"github.com/int128/amefurisobot/usecases"
 	"google.golang.org/appengine/log"
 	"image/png"

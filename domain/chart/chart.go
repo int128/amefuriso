@@ -1,11 +1,9 @@
 package chart
 
 import (
-	"bytes"
 	"fmt"
 	"image"
 	"image/color"
-	"image/png"
 	"math"
 
 	"github.com/golang/freetype/truetype"
@@ -13,7 +11,6 @@ import (
 	"github.com/llgcode/draw2d"
 	"github.com/llgcode/draw2d/draw2dimg"
 	"github.com/llgcode/draw2d/draw2dkit"
-	"github.com/pkg/errors"
 	"golang.org/x/image/font/gofont/goregular"
 )
 
@@ -61,15 +58,6 @@ func Draw(w domain.Weather) image.Image {
 	drawRainfalls(gc, w.Forecasts, forecastColor)
 
 	return img
-}
-
-func DrawPNG(w domain.Weather) ([]byte, error) {
-	img := Draw(w)
-	var b bytes.Buffer
-	if err := png.Encode(&b, img); err != nil {
-		return nil, errors.Wrapf(err, "error while encoding PNG")
-	}
-	return b.Bytes(), nil
 }
 
 func drawAxis(gc *draw2dimg.GraphicContext, boxHeight float64) {
