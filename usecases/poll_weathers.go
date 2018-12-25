@@ -5,7 +5,6 @@ import (
 
 	"github.com/int128/amefurisobot/domain"
 	"github.com/int128/amefurisobot/presenters/chart"
-	"github.com/int128/amefurisobot/presenters/message"
 	"github.com/pkg/errors"
 )
 
@@ -67,8 +66,8 @@ func (u *PollWeathers) doSubscription(ctx context.Context, user domain.User, sub
 	if recipient.IsZero() {
 		return nil
 	}
-	forecastMessage := domain.NewForecastMessage(weather)
-	if forecastMessage == domain.NoForecastMessage {
+	forecast := domain.NewForecast(weather)
+	if !forecast.HasAnyTopic() {
 		return nil
 	}
 
@@ -80,11 +79,13 @@ func (u *PollWeathers) doSubscription(ctx context.Context, user domain.User, sub
 	if err := u.PNGRepository.Save(ctx, image); err != nil {
 		return errors.Wrapf(err, "error while saving the image")
 	}
-	msg := domain.Message{
-		Text:     message.Format(forecastMessage, urlProviders.WeatherURLProvider(user.ID, subscription.ID)),
-		ImageURL: urlProviders.ImageURLProvider(image.ID),
+
+	forecastMessage := domain.ForecastMessage{
+		Forecast:   forecast,
+		ImageURL:   urlProviders.ImageURLProvider(image.ID),
+		WeatherURL: urlProviders.WeatherURLProvider(user.ID, subscription.ID),
 	}
-	if err := u.NotificationService.Send(ctx, recipient, msg); err != nil {
+	if err := u.NotificationService.SendForecastMessage(ctx, recipient, forecastMessage); err != nil {
 		return errors.Wrapf(err, "error while sending the message")
 	}
 	return nil

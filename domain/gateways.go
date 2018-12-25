@@ -34,6 +34,12 @@ type WeatherService interface {
 	Get(ctx context.Context, clientID YahooClientID, locations []Location, observationOption ObservationOption) ([]Weather, error)
 }
 
+type ForecastMessage struct {
+	Forecast   Forecast
+	ImageURL   string
+	WeatherURL string
+}
+
 type NotificationService interface {
-	Send(ctx context.Context, recipient Recipient, message Message) error
+	SendForecastMessage(ctx context.Context, recipient Recipient, message ForecastMessage) error
 }

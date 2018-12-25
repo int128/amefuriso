@@ -240,14 +240,14 @@ func (m *MockNotificationService) EXPECT() *MockNotificationServiceMockRecorder 
 	return m.recorder
 }
 
-// Send mocks base method
-func (m *MockNotificationService) Send(arg0 context.Context, arg1 domain.Recipient, arg2 domain.Message) error {
-	ret := m.ctrl.Call(m, "Send", arg0, arg1, arg2)
+// SendForecastMessage mocks base method
+func (m *MockNotificationService) SendForecastMessage(arg0 context.Context, arg1 domain.Recipient, arg2 domain.ForecastMessage) error {
+	ret := m.ctrl.Call(m, "SendForecastMessage", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// Send indicates an expected call of Send
-func (mr *MockNotificationServiceMockRecorder) Send(arg0, arg1, arg2 interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Send", reflect.TypeOf((*MockNotificationService)(nil).Send), arg0, arg1, arg2)
+// SendForecastMessage indicates an expected call of SendForecastMessage
+func (mr *MockNotificationServiceMockRecorder) SendForecastMessage(arg0, arg1, arg2 interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendForecastMessage", reflect.TypeOf((*MockNotificationService)(nil).SendForecastMessage), arg0, arg1, arg2)
 }
