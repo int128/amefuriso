@@ -3,7 +3,6 @@ package gateways
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/int128/amefurisobot/domain"
 	"github.com/int128/slack"
@@ -32,7 +31,6 @@ func (s *NotificationService) SendForecastMessage(ctx context.Context, recipient
 		Title:     text,
 		TitleLink: message.WeatherURL,
 		ImageURL:  message.ImageURL,
-		Timestamp: time.Now().Unix(),
 	}
 	err := s.Client.Send(ctx, recipient.SlackWebhookURL, slack.Message{
 		Attachments: []slack.Attachment{attachment},
