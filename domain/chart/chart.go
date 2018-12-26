@@ -7,7 +7,7 @@ import (
 	"math"
 
 	"github.com/golang/freetype/truetype"
-	"github.com/int128/amefurisobot/domain"
+	"github.com/int128/amefuriso/domain"
 	"github.com/llgcode/draw2d"
 	"github.com/llgcode/draw2d/draw2dimg"
 	"github.com/llgcode/draw2d/draw2dkit"

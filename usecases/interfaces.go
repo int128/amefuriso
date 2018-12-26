@@ -3,10 +3,10 @@ package usecases
 import (
 	"context"
 
-	"github.com/int128/amefurisobot/domain"
+	"github.com/int128/amefuriso/domain"
 )
 
-//go:generate mockgen -destination mock_usecases/mock_usecases.go github.com/int128/amefurisobot/usecases IGetWeather,IGetImage,IPollWeathers,ICleanupImages,ISetup
+//go:generate mockgen -destination mock_usecases/mock_usecases.go github.com/int128/amefuriso/usecases IGetWeather,IGetImage,IPollWeathers,ICleanupImages,ISetup
 
 type IGetWeather interface {
 	Do(ctx context.Context, userID domain.UserID, subscriptionID domain.SubscriptionID) (*domain.Weather, error)

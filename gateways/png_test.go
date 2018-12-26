@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/favclip/testerator"
-	"github.com/int128/amefurisobot/domain"
+	"github.com/int128/amefuriso/domain"
 	"google.golang.org/appengine/datastore"
 )
 

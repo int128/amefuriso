@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/int128/amefurisobot/domain"
+	"github.com/int128/amefuriso/domain"
 	"github.com/int128/slack"
 	"github.com/pkg/errors"
 )

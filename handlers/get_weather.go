@@ -2,9 +2,9 @@ package handlers
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/int128/amefurisobot/domain"
-	"github.com/int128/amefurisobot/domain/chart"
-	"github.com/int128/amefurisobot/usecases"
+	"github.com/int128/amefuriso/domain"
+	"github.com/int128/amefuriso/domain/chart"
+	"github.com/int128/amefuriso/usecases"
 	"google.golang.org/appengine/log"
 	"image/png"
 	"net/http"

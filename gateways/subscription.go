@@ -3,7 +3,7 @@ package gateways
 import (
 	"context"
 
-	"github.com/int128/amefurisobot/domain"
+	"github.com/int128/amefuriso/domain"
 	"github.com/pkg/errors"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/datastore"

@@ -7,9 +7,9 @@ import (
 
 	"github.com/go-test/deep"
 	"github.com/golang/mock/gomock"
-	"github.com/int128/amefurisobot/domain"
-	"github.com/int128/amefurisobot/domain/testdata"
-	"github.com/int128/amefurisobot/gateways/mock_infrastructure"
+	"github.com/int128/amefuriso/domain"
+	"github.com/int128/amefuriso/domain/testdata"
+	"github.com/int128/amefuriso/gateways/mock_infrastructure"
 	"github.com/int128/go-yahoo-weather/weather"
 )
 

@@ -5,8 +5,8 @@ import (
 	"context"
 	"image/png"
 
-	"github.com/int128/amefurisobot/domain"
-	"github.com/int128/amefurisobot/domain/chart"
+	"github.com/int128/amefuriso/domain"
+	"github.com/int128/amefuriso/domain/chart"
 	"github.com/pkg/errors"
 )
 

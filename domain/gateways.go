@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-//go:generate mockgen -destination mock_gateways/mock_gateways.go -package mock_gateways github.com/int128/amefurisobot/domain UserRepository,SubscriptionRepository,PNGRepository,WeatherService,NotificationService
+//go:generate mockgen -destination mock_gateways/mock_gateways.go -package mock_gateways github.com/int128/amefuriso/domain UserRepository,SubscriptionRepository,PNGRepository,WeatherService,NotificationService
 
 type UserRepository interface {
 	FindById(ctx context.Context, id UserID) (*User, error)

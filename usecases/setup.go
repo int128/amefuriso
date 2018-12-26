@@ -2,7 +2,7 @@ package usecases
 
 import (
 	"context"
-	"github.com/int128/amefurisobot/domain"
+	"github.com/int128/amefuriso/domain"
 	"github.com/pkg/errors"
 )
 

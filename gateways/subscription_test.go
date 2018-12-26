@@ -5,8 +5,8 @@ import (
 
 	"github.com/favclip/testerator"
 	"github.com/go-test/deep"
-	"github.com/int128/amefurisobot/domain"
-	"github.com/int128/amefurisobot/domain/testdata"
+	"github.com/int128/amefuriso/domain"
+	"github.com/int128/amefuriso/domain/testdata"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/datastore"
 )

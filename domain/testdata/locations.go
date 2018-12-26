@@ -1,6 +1,6 @@
 package testdata
 
-import "github.com/int128/amefurisobot/domain"
+import "github.com/int128/amefuriso/domain"
 
 var TokyoLocation = domain.Location{
 	Name:        "Tokyo",

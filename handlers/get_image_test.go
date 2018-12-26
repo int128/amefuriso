@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/int128/amefurisobot/domain"
-	"github.com/int128/amefurisobot/usecases/mock_usecases"
+	"github.com/int128/amefuriso/domain"
+	"github.com/int128/amefuriso/usecases/mock_usecases"
 )
 
 func TestGetImage_ServeHTTP(t *testing.T) {

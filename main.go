@@ -4,10 +4,10 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/int128/amefurisobot/gateways"
-	"github.com/int128/amefurisobot/handlers"
-	"github.com/int128/amefurisobot/infrastructure"
-	"github.com/int128/amefurisobot/usecases"
+	"github.com/int128/amefuriso/gateways"
+	"github.com/int128/amefuriso/handlers"
+	"github.com/int128/amefuriso/infrastructure"
+	"github.com/int128/amefuriso/usecases"
 	"google.golang.org/appengine"
 )
 

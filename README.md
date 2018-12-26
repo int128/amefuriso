@@ -1,4 +1,4 @@
-# amefurisobot [![CircleCI](https://circleci.com/gh/int128/amefurisobot.svg?style=shield)](https://circleci.com/gh/int128/amefurisobot)
+# amefuriso [![CircleCI](https://circleci.com/gh/int128/amefuriso.svg?style=shield)](https://circleci.com/gh/int128/amefuriso)
 
 A bot for notifying rainfall forecast using [Yahoo Japan Weather API](https://developer.yahoo.co.jp/webapi/map/openlocalplatform/v1/weather.html).
 

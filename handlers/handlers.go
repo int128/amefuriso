@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/int128/amefurisobot/domain"
-	"github.com/int128/amefurisobot/usecases"
+	"github.com/int128/amefuriso/domain"
+	"github.com/int128/amefuriso/usecases"
 
 	"github.com/gorilla/mux"
 )

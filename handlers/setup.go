@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"fmt"
-	"github.com/int128/amefurisobot/usecases"
+	"github.com/int128/amefuriso/usecases"
 	"google.golang.org/appengine/log"
 	"net/http"
 )

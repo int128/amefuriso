@@ -2,10 +2,10 @@ package handlers
 
 import (
 	"github.com/gorilla/mux"
-	"github.com/int128/amefurisobot/usecases"
+	"github.com/int128/amefuriso/usecases"
 	"net/http"
 
-	"github.com/int128/amefurisobot/domain"
+	"github.com/int128/amefuriso/domain"
 	"google.golang.org/appengine/log"
 )
 

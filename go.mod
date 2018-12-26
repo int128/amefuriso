@@ -1,4 +1,4 @@
-module github.com/int128/amefurisobot
+module github.com/int128/amefuriso
 
 require (
 	github.com/favclip/testerator v0.0.0-20181109065310-c967692c9c65

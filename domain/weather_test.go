@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/go-test/deep"
-	"github.com/int128/amefurisobot/domain"
+	"github.com/int128/amefuriso/domain"
 	"github.com/int128/go-yahoo-weather/weather"
 )
 

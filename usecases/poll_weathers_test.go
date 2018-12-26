@@ -5,9 +5,9 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/int128/amefurisobot/domain"
-	"github.com/int128/amefurisobot/domain/mock_gateways"
-	"github.com/int128/amefurisobot/domain/testdata"
+	"github.com/int128/amefuriso/domain"
+	"github.com/int128/amefuriso/domain/mock_gateways"
+	"github.com/int128/amefuriso/domain/testdata"
 )
 
 func TestPollWeathers_Do_WithoutNotification(t *testing.T) {
