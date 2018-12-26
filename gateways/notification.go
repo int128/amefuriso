@@ -3,6 +3,7 @@ package gateways
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/int128/amefurisobot/domain"
 	"github.com/int128/slack"
@@ -16,20 +17,22 @@ type NotificationService struct {
 func (s *NotificationService) SendForecastMessage(ctx context.Context, recipient domain.Recipient, message domain.ForecastMessage) error {
 	text := "予報はありません"
 	if start := message.Forecast.RainWillStart; start != nil {
-		text = fmt.Sprintf("%s で %s から雨が降る見込みです。",
+		text = fmt.Sprintf("%s で %s から雨が降る見込みです",
 			message.Forecast.Location.Name,
 			start.Time.Format("15:04"))
 	}
 	if stop := message.Forecast.RainWillStop; stop != nil {
-		text = fmt.Sprintf("%s で %s に雨が止む見込みです。",
+		text = fmt.Sprintf("%s で %s に雨が止む見込みです",
 			message.Forecast.Location.Name,
 			stop.Time.Format("15:04"))
 	}
 
 	attachment := slack.Attachment{
-		ImageURL: message.ImageURL,
-		Fallback: text,
-		Text:     fmt.Sprintf("%s <最新の予報|%s>", text, message.WeatherURL),
+		Fallback:  text,
+		Title:     text,
+		TitleLink: message.WeatherURL,
+		ImageURL:  message.ImageURL,
+		Timestamp: time.Now().Unix(),
 	}
 	err := s.Client.Send(ctx, recipient.SlackWebhookURL, slack.Message{
 		Attachments: []slack.Attachment{attachment},
