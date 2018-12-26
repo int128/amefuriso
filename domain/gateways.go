@@ -2,6 +2,7 @@ package domain
 
 import (
 	"context"
+	"time"
 )
 
 //go:generate mockgen -destination mock_gateways/mock_gateways.go -package mock_gateways github.com/int128/amefurisobot/domain UserRepository,SubscriptionRepository,PNGRepository,WeatherService,NotificationService
@@ -20,6 +21,7 @@ type SubscriptionRepository interface {
 
 type PNGRepository interface {
 	FindById(ctx context.Context, id ImageID) (*Image, error)
+	RemoveOlderThan(ctx context.Context, t time.Time) (int, error)
 	Save(ctx context.Context, image Image) error
 }
 

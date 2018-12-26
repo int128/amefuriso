@@ -2,8 +2,9 @@ package gateways
 
 import (
 	"context"
-	"github.com/int128/amefurisobot/domain"
 	"time"
+
+	"github.com/int128/amefurisobot/domain"
 
 	"github.com/pkg/errors"
 	"google.golang.org/appengine/datastore"
@@ -38,6 +39,23 @@ func (r *PNGRepository) FindById(ctx context.Context, id domain.ImageID) (*domai
 		Bytes:       e.Image,
 		Time:        e.Time,
 	}, nil
+}
+
+func (r *PNGRepository) RemoveOlderThan(ctx context.Context, t time.Time) (int, error) {
+	q := datastore.NewQuery(pngKind).KeysOnly().
+		Filter("Time <", t).
+		Limit(1000)
+	keys, err := q.GetAll(ctx, nil)
+	if err != nil {
+		return 0, errors.Wrapf(err, "error while querying entities")
+	}
+	if len(keys) == 0 {
+		return len(keys), nil
+	}
+	if err := datastore.DeleteMulti(ctx, keys); err != nil {
+		return len(keys), errors.Wrapf(err, "error while deleting the entities")
+	}
+	return len(keys), nil
 }
 
 func (r *PNGRepository) Save(ctx context.Context, image domain.Image) error {

@@ -9,6 +9,7 @@ import (
 	gomock "github.com/golang/mock/gomock"
 	domain "github.com/int128/amefurisobot/domain"
 	reflect "reflect"
+	time "time"
 )
 
 // MockUserRepository is a mock of UserRepository interface
@@ -167,6 +168,19 @@ func (m *MockPNGRepository) FindById(arg0 context.Context, arg1 domain.ImageID) 
 // FindById indicates an expected call of FindById
 func (mr *MockPNGRepositoryMockRecorder) FindById(arg0, arg1 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindById", reflect.TypeOf((*MockPNGRepository)(nil).FindById), arg0, arg1)
+}
+
+// RemoveOlderThan mocks base method
+func (m *MockPNGRepository) RemoveOlderThan(arg0 context.Context, arg1 time.Time) (int, error) {
+	ret := m.ctrl.Call(m, "RemoveOlderThan", arg0, arg1)
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RemoveOlderThan indicates an expected call of RemoveOlderThan
+func (mr *MockPNGRepositoryMockRecorder) RemoveOlderThan(arg0, arg1 interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveOlderThan", reflect.TypeOf((*MockPNGRepository)(nil).RemoveOlderThan), arg0, arg1)
 }
 
 // Save mocks base method

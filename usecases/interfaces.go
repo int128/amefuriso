@@ -6,7 +6,7 @@ import (
 	"github.com/int128/amefurisobot/domain"
 )
 
-//go:generate mockgen -destination mock_usecases/mock_usecases.go github.com/int128/amefurisobot/usecases IGetWeather,IGetImage,IPollWeathers,ISetup
+//go:generate mockgen -destination mock_usecases/mock_usecases.go github.com/int128/amefurisobot/usecases IGetWeather,IGetImage,IPollWeathers,ICleanupImages,ISetup
 
 type IGetWeather interface {
 	Do(ctx context.Context, userID domain.UserID, subscriptionID domain.SubscriptionID) (*domain.Weather, error)
@@ -18,6 +18,10 @@ type IGetImage interface {
 
 type IPollWeathers interface {
 	Do(ctx context.Context, urlProviders URLProviders) error
+}
+
+type ICleanupImages interface {
+	Do(ctx context.Context) error
 }
 
 type ISetup interface {

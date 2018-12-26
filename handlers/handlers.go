@@ -14,10 +14,11 @@ import (
 type ContextProvider func(*http.Request) context.Context
 
 type Handlers struct {
-	GetWeather   GetWeather
-	GetImage     GetImage
-	PollWeathers PollWeathers
-	Setup        Setup
+	GetWeather    GetWeather
+	GetImage      GetImage
+	PollWeathers  PollWeathers
+	CleanupImages CleanupImages
+	Setup         Setup
 }
 
 func (h *Handlers) NewRouter() http.Handler {
@@ -25,6 +26,7 @@ func (h *Handlers) NewRouter() http.Handler {
 	m.Path("/{userID}/{subscriptionID}/weather").Methods("GET").Handler(&h.GetWeather)
 	m.Path("/images/{ID}.png").Methods("GET").Handler(&h.GetImage)
 	m.Path("/internal/poll-weather").Methods("GET").Handler(&h.PollWeathers)
+	m.Path("/internal/cleanup-images").Methods("GET").Handler(&h.CleanupImages)
 	m.Path("/internal/setup").Methods("GET").Handler(&h.Setup)
 	return m
 }

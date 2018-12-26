@@ -47,6 +47,12 @@ func main() {
 				},
 			},
 		},
+		CleanupImages: handlers.CleanupImages{
+			ContextProvider: contextProvider,
+			Usecase: &usecases.CleanupImages{
+				PNGRepository: &gateways.PNGRepository{},
+			},
+		},
 		Setup: handlers.Setup{
 			ContextProvider: contextProvider,
 			Usecase: &usecases.Setup{
