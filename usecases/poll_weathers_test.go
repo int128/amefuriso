@@ -6,8 +6,10 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/int128/amefuriso/domain"
-	"github.com/int128/amefuriso/domain/mock_gateways"
 	"github.com/int128/amefuriso/domain/testdata"
+	"github.com/int128/amefuriso/gateways/interfaces"
+	"github.com/int128/amefuriso/gateways/interfaces/mock_gateways"
+	"github.com/int128/amefuriso/usecases/interfaces"
 )
 
 func TestPollWeathers_Do_WithoutNotification(t *testing.T) {
@@ -15,7 +17,7 @@ func TestPollWeathers_Do_WithoutNotification(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	urlProviders := URLProviders{
+	urlProviders := usecases.URLProviders{
 		ImageURLProvider: func(id domain.ImageID) string {
 			return "/" + string(id)
 		},
@@ -40,7 +42,7 @@ func TestPollWeathers_Do_WithoutNotification(t *testing.T) {
 	}, nil)
 	weatherService := mock_gateways.NewMockWeatherService(ctrl)
 	weatherService.EXPECT().
-		Get(ctx, domain.YahooClientID("CLIENT1"), []domain.Location{testdata.TokyoLocation}, domain.NoObservation).
+		Get(ctx, domain.YahooClientID("CLIENT1"), []domain.Location{testdata.TokyoLocation}, gateways.NoObservation).
 		Return([]domain.Weather{
 			{
 				Location:     testdata.TokyoLocation,

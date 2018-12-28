@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/int128/amefuriso/usecases"
+	"github.com/int128/amefuriso/usecases/interfaces"
 	"google.golang.org/appengine/log"
 )
 
 type PollWeathers struct {
 	ContextProvider ContextProvider
-	Usecase         usecases.IPollWeathers
+	Usecase         usecases.PollWeathers
 }
 
 func (h *PollWeathers) ServeHTTP(w http.ResponseWriter, req *http.Request) {

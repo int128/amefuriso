@@ -7,7 +7,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/int128/amefuriso/domain"
-	"github.com/int128/amefuriso/usecases/mock_usecases"
+	"github.com/int128/amefuriso/usecases/interfaces/mock_usecases"
 )
 
 func TestGetImage_ServeHTTP(t *testing.T) {
@@ -15,7 +15,7 @@ func TestGetImage_ServeHTTP(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	usecase := mock_usecases.NewMockIGetImage(ctrl)
+	usecase := mock_usecases.NewMockGetImage(ctrl)
 	usecase.EXPECT().
 		Do(ctx, domain.ImageID("FOO")).
 		Return(&domain.Image{ContentType: "image/png"}, nil)
@@ -39,7 +39,7 @@ func TestGetImage_ServeHTTP_NotFound(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	usecase := mock_usecases.NewMockIGetImage(ctrl)
+	usecase := mock_usecases.NewMockGetImage(ctrl)
 	usecase.EXPECT().
 		Do(ctx, domain.ImageID("FOO")).
 		Return(nil, domain.ErrNoSuchImage{ID: domain.ImageID("FOO")})

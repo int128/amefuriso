@@ -4,13 +4,13 @@ import (
 	"context"
 	"time"
 
-	"github.com/int128/amefuriso/domain"
+	"github.com/int128/amefuriso/gateways/interfaces"
 	"github.com/pkg/errors"
 	"google.golang.org/appengine/log"
 )
 
 type CleanupImages struct {
-	PNGRepository domain.PNGRepository
+	PNGRepository gateways.PNGRepository
 }
 
 func (usecase *CleanupImages) Do(ctx context.Context) error {

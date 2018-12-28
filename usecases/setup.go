@@ -2,13 +2,15 @@ package usecases
 
 import (
 	"context"
+
 	"github.com/int128/amefuriso/domain"
+	"github.com/int128/amefuriso/gateways/interfaces"
 	"github.com/pkg/errors"
 )
 
 type Setup struct {
-	UserRepository         domain.UserRepository
-	SubscriptionRepository domain.SubscriptionRepository
+	UserRepository         gateways.UserRepository
+	SubscriptionRepository gateways.SubscriptionRepository
 }
 
 func (u *Setup) Do(ctx context.Context) (*domain.User, error) {

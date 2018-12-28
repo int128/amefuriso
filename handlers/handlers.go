@@ -5,10 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/int128/amefuriso/domain"
-	"github.com/int128/amefuriso/usecases"
-
 	"github.com/gorilla/mux"
+	"github.com/int128/amefuriso/domain"
+	"github.com/int128/amefuriso/usecases/interfaces"
 )
 
 type ContextProvider func(*http.Request) context.Context

@@ -7,7 +7,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/int128/amefuriso/domain"
-	"github.com/int128/amefuriso/usecases/mock_usecases"
+	"github.com/int128/amefuriso/usecases/interfaces/mock_usecases"
 )
 
 func TestGetWeather_ServeHTTP(t *testing.T) {
@@ -15,7 +15,7 @@ func TestGetWeather_ServeHTTP(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	usecase := mock_usecases.NewMockIGetWeather(ctrl)
+	usecase := mock_usecases.NewMockGetWeather(ctrl)
 	usecase.EXPECT().
 		Do(ctx, domain.UserID("USER1"), domain.SubscriptionID("SUBSCRIPTION1")).
 		Return(&domain.Weather{}, nil)
@@ -39,7 +39,7 @@ func TestGetWeather_ServeHTTP_NotFound(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	usecase := mock_usecases.NewMockIGetWeather(ctrl)
+	usecase := mock_usecases.NewMockGetWeather(ctrl)
 	usecase.EXPECT().
 		Do(ctx, domain.UserID("USER1"), domain.SubscriptionID("SUBSCRIPTION1")).
 		Return(nil, domain.ErrNoSuchUser{ID: "USER1"})

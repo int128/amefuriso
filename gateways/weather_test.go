@@ -9,7 +9,8 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/int128/amefuriso/domain"
 	"github.com/int128/amefuriso/domain/testdata"
-	"github.com/int128/amefuriso/gateways/mock_infrastructure"
+	"github.com/int128/amefuriso/gateways/interfaces"
+	"github.com/int128/amefuriso/infrastructure/interfaces/mock_infrastructure"
 	"github.com/int128/go-yahoo-weather/weather"
 )
 
@@ -58,7 +59,7 @@ func TestWeatherService_Get(t *testing.T) {
 	actual, err := service.Get(ctx,
 		domain.YahooClientID("CLIENT_ID"),
 		[]domain.Location{testdata.TokyoLocation, testdata.HakodateLocation},
-		domain.OneHourObservation)
+		gateways.OneHourObservation)
 	if err != nil {
 		t.Fatalf("Error while service.Get: %s", err)
 	}

@@ -1,18 +1,19 @@
 package handlers
 
 import (
+	"image/png"
+	"net/http"
+
 	"github.com/gorilla/mux"
 	"github.com/int128/amefuriso/domain"
 	"github.com/int128/amefuriso/domain/chart"
-	"github.com/int128/amefuriso/usecases"
+	"github.com/int128/amefuriso/usecases/interfaces"
 	"google.golang.org/appengine/log"
-	"image/png"
-	"net/http"
 )
 
 type GetWeather struct {
 	ContextProvider ContextProvider
-	Usecase         usecases.IGetWeather
+	Usecase         usecases.GetWeather
 }
 
 func (h *GetWeather) ServeHTTP(w http.ResponseWriter, req *http.Request) {

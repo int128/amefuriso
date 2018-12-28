@@ -1,4 +1,4 @@
-package gateways
+package infrastructure
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"github.com/int128/slack"
 )
 
-//go:generate mockgen -destination mock_infrastructure/mock_infrastructure.go -package mock_infrastructure github.com/int128/amefuriso/gateways WeatherClient,SlackClient
+//go:generate mockgen -destination mock_infrastructure/mock_infrastructure.go -package mock_infrastructure github.com/int128/amefuriso/infrastructure/interfaces WeatherClient,SlackClient
 
 type WeatherClient interface {
 	Get(ctx context.Context, clientID string, req weather.Request) ([]weather.Weather, error)

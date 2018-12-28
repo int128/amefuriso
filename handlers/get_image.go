@@ -1,17 +1,17 @@
 package handlers
 
 import (
-	"github.com/gorilla/mux"
-	"github.com/int128/amefuriso/usecases"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/int128/amefuriso/domain"
+	"github.com/int128/amefuriso/usecases/interfaces"
 	"google.golang.org/appengine/log"
 )
 
 type GetImage struct {
 	ContextProvider ContextProvider
-	Usecase         usecases.IGetImage
+	Usecase         usecases.GetImage
 }
 
 func (h *GetImage) ServeHTTP(w http.ResponseWriter, req *http.Request) {

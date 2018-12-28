@@ -4,15 +4,17 @@ import (
 	"context"
 
 	"github.com/int128/amefuriso/domain"
+	"github.com/int128/amefuriso/gateways/interfaces"
+	"github.com/int128/amefuriso/infrastructure/interfaces"
 	"github.com/int128/go-yahoo-weather/weather"
 	"github.com/pkg/errors"
 )
 
 type WeatherService struct {
-	Client WeatherClient
+	Client infrastructure.WeatherClient
 }
 
-func (s *WeatherService) Get(ctx context.Context, clientID domain.YahooClientID, locations []domain.Location, observationOption domain.ObservationOption) ([]domain.Weather, error) {
+func (s *WeatherService) Get(ctx context.Context, clientID domain.YahooClientID, locations []domain.Location, observationOption gateways.ObservationOption) ([]domain.Weather, error) {
 	req := weather.Request{
 		IntervalMinutes: 5,
 		PastHours:       int(observationOption),

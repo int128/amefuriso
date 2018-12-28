@@ -2,14 +2,16 @@ package usecases
 
 import (
 	"context"
+
 	"github.com/int128/amefuriso/domain"
+	"github.com/int128/amefuriso/gateways/interfaces"
 	"github.com/pkg/errors"
 )
 
 type GetWeather struct {
-	UserRepository         domain.UserRepository
-	SubscriptionRepository domain.SubscriptionRepository
-	WeatherService         domain.WeatherService
+	UserRepository         gateways.UserRepository
+	SubscriptionRepository gateways.SubscriptionRepository
+	WeatherService         gateways.WeatherService
 }
 
 func (u *GetWeather) Do(ctx context.Context, userID domain.UserID, subscriptionID domain.SubscriptionID) (*domain.Weather, error) {
@@ -27,7 +29,7 @@ func (u *GetWeather) Do(ctx context.Context, userID domain.UserID, subscriptionI
 		}
 		return nil, errors.Wrapf(err, "error while finding subscription")
 	}
-	weathers, err := u.WeatherService.Get(ctx, user.YahooClientID, []domain.Location{subscription.Location}, domain.OneHourObservation)
+	weathers, err := u.WeatherService.Get(ctx, user.YahooClientID, []domain.Location{subscription.Location}, gateways.OneHourObservation)
 	if err != nil {
 		return nil, errors.Wrapf(err, "error while fetching weather")
 	}

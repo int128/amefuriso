@@ -2,14 +2,15 @@ package handlers
 
 import (
 	"fmt"
-	"github.com/int128/amefuriso/usecases"
-	"google.golang.org/appengine/log"
 	"net/http"
+
+	"github.com/int128/amefuriso/usecases/interfaces"
+	"google.golang.org/appengine/log"
 )
 
 type Setup struct {
 	ContextProvider ContextProvider
-	Usecase         usecases.ISetup
+	Usecase         usecases.Setup
 }
 
 func (h *Setup) ServeHTTP(w http.ResponseWriter, req *http.Request) {

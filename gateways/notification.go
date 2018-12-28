@@ -5,15 +5,17 @@ import (
 	"fmt"
 
 	"github.com/int128/amefuriso/domain"
+	"github.com/int128/amefuriso/gateways/interfaces"
+	"github.com/int128/amefuriso/infrastructure/interfaces"
 	"github.com/int128/slack"
 	"github.com/pkg/errors"
 )
 
 type NotificationService struct {
-	Client SlackClient
+	Client infrastructure.SlackClient
 }
 
-func (s *NotificationService) SendForecastMessage(ctx context.Context, recipient domain.Recipient, message domain.ForecastMessage) error {
+func (s *NotificationService) SendForecastMessage(ctx context.Context, recipient domain.Recipient, message gateways.ForecastMessage) error {
 	text := "予報はありません"
 	if start := message.Forecast.RainWillStart; start != nil {
 		text = fmt.Sprintf("%s で %s から雨が降る見込みです",

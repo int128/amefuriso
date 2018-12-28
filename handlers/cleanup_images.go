@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/int128/amefuriso/usecases"
+	"github.com/int128/amefuriso/usecases/interfaces"
 	"google.golang.org/appengine/log"
 )
 
 type CleanupImages struct {
 	ContextProvider ContextProvider
-	Usecase         usecases.ICleanupImages
+	Usecase         usecases.CleanupImages
 }
 
 func (h *CleanupImages) ServeHTTP(w http.ResponseWriter, req *http.Request) {

@@ -7,25 +7,20 @@ import (
 
 	"github.com/int128/amefuriso/domain"
 	"github.com/int128/amefuriso/domain/chart"
+	"github.com/int128/amefuriso/gateways/interfaces"
+	"github.com/int128/amefuriso/usecases/interfaces"
 	"github.com/pkg/errors"
 )
 
-type ImageURLProvider func(id domain.ImageID) string
-type WeatherURLProvider func(userID domain.UserID, subscriptionID domain.SubscriptionID) string
-type URLProviders struct {
-	ImageURLProvider   ImageURLProvider
-	WeatherURLProvider WeatherURLProvider
-}
-
 type PollWeathers struct {
-	UserRepository         domain.UserRepository
-	SubscriptionRepository domain.SubscriptionRepository
-	WeatherService         domain.WeatherService
-	PNGRepository          domain.PNGRepository
-	NotificationService    domain.NotificationService
+	UserRepository         gateways.UserRepository
+	SubscriptionRepository gateways.SubscriptionRepository
+	WeatherService         gateways.WeatherService
+	PNGRepository          gateways.PNGRepository
+	NotificationService    gateways.NotificationService
 }
 
-func (u *PollWeathers) Do(ctx context.Context, urlProviders URLProviders) error {
+func (u *PollWeathers) Do(ctx context.Context, urlProviders usecases.URLProviders) error {
 	users, err := u.UserRepository.FindAll(ctx)
 	if err != nil {
 		return errors.Wrapf(err, "error while getting users")
@@ -38,7 +33,7 @@ func (u *PollWeathers) Do(ctx context.Context, urlProviders URLProviders) error 
 	return nil
 }
 
-func (u *PollWeathers) doUser(ctx context.Context, user domain.User, urlProviders URLProviders) error {
+func (u *PollWeathers) doUser(ctx context.Context, user domain.User, urlProviders usecases.URLProviders) error {
 	subscriptions, err := u.SubscriptionRepository.FindByUserID(ctx, user.ID)
 	if err != nil {
 		return errors.Wrapf(err, "error while getting subscriptions")
@@ -50,7 +45,7 @@ func (u *PollWeathers) doUser(ctx context.Context, user domain.User, urlProvider
 	for _, subscription := range subscriptions {
 		locations = append(locations, subscription.Location)
 	}
-	weathers, err := u.WeatherService.Get(ctx, user.YahooClientID, locations, domain.NoObservation)
+	weathers, err := u.WeatherService.Get(ctx, user.YahooClientID, locations, gateways.NoObservation)
 	if err != nil {
 		return errors.Wrapf(err, "error while getting weather")
 	}
@@ -63,7 +58,7 @@ func (u *PollWeathers) doUser(ctx context.Context, user domain.User, urlProvider
 	return nil
 }
 
-func (u *PollWeathers) doSubscription(ctx context.Context, user domain.User, subscription domain.Subscription, weather domain.Weather, urlProviders URLProviders) error {
+func (u *PollWeathers) doSubscription(ctx context.Context, user domain.User, subscription domain.Subscription, weather domain.Weather, urlProviders usecases.URLProviders) error {
 	recipient := subscription.Recipient
 	if recipient.IsZero() {
 		return nil
@@ -83,7 +78,7 @@ func (u *PollWeathers) doSubscription(ctx context.Context, user domain.User, sub
 		return errors.Wrapf(err, "error while saving the image")
 	}
 
-	forecastMessage := domain.ForecastMessage{
+	forecastMessage := gateways.ForecastMessage{
 		Forecast:   forecast,
 		ImageURL:   urlProviders.ImageURLProvider(image.ID),
 		WeatherURL: urlProviders.WeatherURLProvider(user.ID, subscription.ID),
