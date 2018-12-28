@@ -18,12 +18,12 @@ type NotificationService struct {
 func (s *NotificationService) SendForecastMessage(ctx context.Context, recipient domain.Recipient, message gateways.ForecastMessage) error {
 	text := "予報はありません"
 	if start := message.Forecast.RainWillStart; start != nil {
-		text = fmt.Sprintf("%s で %s から雨が降る見込みです",
+		text = fmt.Sprintf("%s で %s から雨が降りそうです",
 			message.Forecast.Location.Name,
 			start.Time.Format("15:04"))
 	}
 	if stop := message.Forecast.RainWillStop; stop != nil {
-		text = fmt.Sprintf("%s で %s に雨が止む見込みです",
+		text = fmt.Sprintf("%s で %s に雨が止みそうです",
 			message.Forecast.Location.Name,
 			stop.Time.Format("15:04"))
 	}
