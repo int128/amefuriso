@@ -5,4 +5,4 @@ cron:
 
   - description:
     url: /internal/cleanup-images
-    schedule: every day
+    schedule: every 24 hours
