@@ -19,11 +19,11 @@ type Handlers struct {
 
 func (h *Handlers) NewRouter() http.Handler {
 	m := mux.NewRouter()
-	m.Path("/{userID}/{subscriptionID}/weather").Methods("GET").Handler(&h.GetWeather)
-	m.Path("/images/{ID}.png").Methods("GET").Handler(&h.GetImage)
-	m.Path("/internal/poll-weather").Methods("GET").Handler(&h.PollWeathers)
-	m.Path("/internal/cleanup-images").Methods("GET").Handler(&h.CleanupImages)
-	m.Path("/internal/setup").Methods("GET").Handler(&h.Setup)
+	m.Methods("GET").Path("/{userID}/{subscriptionID}/weather").Handler(&h.GetWeather)
+	m.Methods("GET").Path("/images/{ID}.png").Handler(&h.GetImage)
+	m.Methods("GET").Path("/internal/poll-weather").Handler(&h.PollWeathers)
+	m.Methods("GET").Path("/internal/cleanup-images").Handler(&h.CleanupImages)
+	m.Methods("GET").Path("/internal/setup").Handler(&h.Setup)
 	return m
 }
 
