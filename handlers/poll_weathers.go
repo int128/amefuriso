@@ -9,12 +9,11 @@ import (
 )
 
 type PollWeathers struct {
-	ContextProvider ContextProvider
-	Usecase         usecases.PollWeathers
+	Usecase usecases.PollWeathers
 }
 
 func (h *PollWeathers) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	ctx := h.ContextProvider(req)
+	ctx := req.Context()
 	urlProviders := usecases.URLProviders{
 		ImageURLProvider:   getImageURLFunc(req),
 		WeatherURLProvider: getWeatherURLFunc(req),

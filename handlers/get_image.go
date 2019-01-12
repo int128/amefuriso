@@ -10,15 +10,14 @@ import (
 )
 
 type GetImage struct {
-	ContextProvider ContextProvider
-	Usecase         usecases.GetImage
+	Usecase usecases.GetImage
 }
 
 func (h *GetImage) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	v := mux.Vars(req)
 	id := domain.ImageID(v["ID"])
 
-	ctx := h.ContextProvider(req)
+	ctx := req.Context()
 	image, err := h.Usecase.Do(ctx, id)
 	if err != nil {
 		if domain.IsErrNoSuchImage(err) {

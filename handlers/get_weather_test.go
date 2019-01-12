@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"context"
 	"net/http/httptest"
 	"testing"
 
@@ -11,18 +10,17 @@ import (
 )
 
 func TestGetWeather_ServeHTTP(t *testing.T) {
-	ctx := context.Background()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
 	usecase := mock_usecases.NewMockGetWeather(ctrl)
 	usecase.EXPECT().
-		Do(ctx, domain.UserID("USER1"), domain.SubscriptionID("SUBSCRIPTION1")).
+		Do(gomock.Not(nil), domain.UserID("USER1"), domain.SubscriptionID("SUBSCRIPTION1")).
 		Return(&domain.Weather{}, nil)
 
 	req := httptest.NewRequest("GET", "/USER1/SUBSCRIPTION1/weather", nil)
 	w := httptest.NewRecorder()
-	h := Handlers{GetWeather: GetWeather{contextProvider(ctx), usecase}}
+	h := Handlers{GetWeather: GetWeather{usecase}}
 	h.NewRouter().ServeHTTP(w, req)
 
 	if w.Code != 200 {
@@ -35,18 +33,17 @@ func TestGetWeather_ServeHTTP(t *testing.T) {
 }
 
 func TestGetWeather_ServeHTTP_NotFound(t *testing.T) {
-	ctx := context.Background()
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
 	usecase := mock_usecases.NewMockGetWeather(ctrl)
 	usecase.EXPECT().
-		Do(ctx, domain.UserID("USER1"), domain.SubscriptionID("SUBSCRIPTION1")).
+		Do(gomock.Not(nil), domain.UserID("USER1"), domain.SubscriptionID("SUBSCRIPTION1")).
 		Return(nil, domain.ErrNoSuchUser{ID: "USER1"})
 
 	req := httptest.NewRequest("GET", "/USER1/SUBSCRIPTION1/weather", nil)
 	w := httptest.NewRecorder()
-	h := Handlers{GetWeather: GetWeather{contextProvider(ctx), usecase}}
+	h := Handlers{GetWeather: GetWeather{usecase}}
 	h.NewRouter().ServeHTTP(w, req)
 
 	if w.Code != 404 {

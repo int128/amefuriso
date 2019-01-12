@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 
@@ -9,8 +8,6 @@ import (
 	"github.com/int128/amefuriso/domain"
 	"github.com/int128/amefuriso/usecases/interfaces"
 )
-
-type ContextProvider func(*http.Request) context.Context
 
 type Handlers struct {
 	GetWeather    GetWeather

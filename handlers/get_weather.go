@@ -12,15 +12,14 @@ import (
 )
 
 type GetWeather struct {
-	ContextProvider ContextProvider
-	Usecase         usecases.GetWeather
+	Usecase usecases.GetWeather
 }
 
 func (h *GetWeather) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	v := mux.Vars(req)
 	userID, subscriptionID := domain.UserID(v["userID"]), domain.SubscriptionID(v["subscriptionID"])
 
-	ctx := h.ContextProvider(req)
+	ctx := req.Context()
 	weather, err := h.Usecase.Do(ctx, userID, subscriptionID)
 	if err != nil {
 		if domain.IsErrNoSuchUser(err) || domain.IsErrNoSuchSubscription(err) {
