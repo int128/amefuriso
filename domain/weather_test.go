@@ -12,6 +12,17 @@ import (
 
 var baseTime = time.Date(2018, 12, 12, 13, 5, 0, 0, weather.Timezone)
 
+func makeEvents(rainfalls ...domain.RainfallMilliMeterPerHour) []domain.Event {
+	e := make([]domain.Event, len(rainfalls))
+	for i, rainfall := range rainfalls {
+		e[i] = domain.Event{
+			Time:     baseTime.Add(time.Duration(i) * 10 * time.Minute),
+			Rainfall: rainfall,
+		}
+	}
+	return e
+}
+
 func TestWeather_IsRainingNow(t *testing.T) {
 	for i, c := range []struct {
 		Weather      domain.Weather
@@ -19,20 +30,12 @@ func TestWeather_IsRainingNow(t *testing.T) {
 	}{
 		{
 			Weather: domain.Weather{
-				Observations: []domain.Event{
-					{Time: baseTime.Add(0 * time.Minute), Rainfall: 0.35},
-					{Time: baseTime.Add(10 * time.Minute), Rainfall: 0.45},
-					{Time: baseTime.Add(20 * time.Minute), Rainfall: 1.15},
-				},
+				Observations: makeEvents(0.35, 0.45, 1.15),
 			},
 			IsRainingNow: true,
 		}, {
 			Weather: domain.Weather{
-				Observations: []domain.Event{
-					{Time: baseTime.Add(0 * time.Minute), Rainfall: 0.35},
-					{Time: baseTime.Add(10 * time.Minute), Rainfall: 0.45},
-					{Time: baseTime.Add(20 * time.Minute), Rainfall: 0},
-				},
+				Observations: makeEvents(0.35, 0.45, 0),
 			},
 			IsRainingNow: false,
 		},
@@ -48,49 +51,37 @@ func TestWeather_IsRainingNow(t *testing.T) {
 
 func TestWeather_FindRainStarts(t *testing.T) {
 	for i, c := range []struct {
-		Weather domain.Weather
-		Start   *domain.Event
+		Forecasts []domain.Event
+		Start     *domain.Event
 	}{
 		{
-			Weather: domain.Weather{
-				Forecasts: []domain.Event{
-					{Time: baseTime.Add(0 * time.Minute), Rainfall: 0},
-					{Time: baseTime.Add(10 * time.Minute), Rainfall: 0},
-					{Time: baseTime.Add(20 * time.Minute), Rainfall: 0},
-				},
-			},
-			Start: nil,
+			Forecasts: makeEvents(0, 0, 0),
 		}, {
-			Weather: domain.Weather{
-				Forecasts: []domain.Event{
-					{Time: baseTime.Add(0 * time.Minute), Rainfall: 1},
-					{Time: baseTime.Add(10 * time.Minute), Rainfall: 0},
-					{Time: baseTime.Add(20 * time.Minute), Rainfall: 0},
-				},
-			},
-			Start: &domain.Event{Time: baseTime.Add(0 * time.Minute), Rainfall: 1},
+			Forecasts: makeEvents(0, 0, 1),
+			Start:     &domain.Event{Time: baseTime.Add(20 * time.Minute), Rainfall: 1},
 		}, {
-			Weather: domain.Weather{
-				Forecasts: []domain.Event{
-					{Time: baseTime.Add(0 * time.Minute), Rainfall: 0},
-					{Time: baseTime.Add(10 * time.Minute), Rainfall: 1},
-					{Time: baseTime.Add(20 * time.Minute), Rainfall: 0},
-				},
-			},
-			Start: &domain.Event{Time: baseTime.Add(10 * time.Minute), Rainfall: 1},
+			Forecasts: makeEvents(0, 1, 0),
+			Start:     &domain.Event{Time: baseTime.Add(10 * time.Minute), Rainfall: 1},
 		}, {
-			Weather: domain.Weather{
-				Forecasts: []domain.Event{
-					{Time: baseTime.Add(0 * time.Minute), Rainfall: 0},
-					{Time: baseTime.Add(10 * time.Minute), Rainfall: 0},
-					{Time: baseTime.Add(20 * time.Minute), Rainfall: 1},
-				},
-			},
-			Start: &domain.Event{Time: baseTime.Add(20 * time.Minute), Rainfall: 1},
+			Forecasts: makeEvents(0, 1, 1),
+			Start:     &domain.Event{Time: baseTime.Add(10 * time.Minute), Rainfall: 1},
+		}, {
+			Forecasts: makeEvents(1, 1, 1),
+			Start:     &domain.Event{Time: baseTime, Rainfall: 1},
+		}, {
+			Forecasts: makeEvents(1, 1, 0),
+			Start:     &domain.Event{Time: baseTime, Rainfall: 1},
+		}, {
+			Forecasts: makeEvents(1, 0, 1),
+			Start:     &domain.Event{Time: baseTime, Rainfall: 1},
+		}, {
+			Forecasts: makeEvents(1, 0, 0),
+			Start:     &domain.Event{Time: baseTime, Rainfall: 1},
 		},
 	} {
 		t.Run(fmt.Sprintf("%v", i), func(t *testing.T) {
-			actual := c.Weather.FindRainStarts()
+			w := domain.Weather{Forecasts: c.Forecasts}
+			actual := w.FindRainStarts()
 			if diff := deep.Equal(c.Start, actual); diff != nil {
 				t.Error(diff)
 			}
@@ -100,58 +91,37 @@ func TestWeather_FindRainStarts(t *testing.T) {
 
 func TestWeather_FindRainStops(t *testing.T) {
 	for i, c := range []struct {
-		Weather domain.Weather
-		Stop    *domain.Event
+		Forecasts []domain.Event
+		Stop      *domain.Event
 	}{
 		{
-			Weather: domain.Weather{
-				Forecasts: []domain.Event{
-					{Time: baseTime.Add(0 * time.Minute), Rainfall: 0},
-					{Time: baseTime.Add(10 * time.Minute), Rainfall: 0},
-					{Time: baseTime.Add(20 * time.Minute), Rainfall: 0},
-				},
-			},
-			Stop: &domain.Event{Time: baseTime.Add(0 * time.Minute), Rainfall: 0},
+			Forecasts: makeEvents(0, 0, 0),
+			Stop:      &domain.Event{Time: baseTime},
 		}, {
-			Weather: domain.Weather{
-				Forecasts: []domain.Event{
-					{Time: baseTime.Add(0 * time.Minute), Rainfall: 1},
-					{Time: baseTime.Add(10 * time.Minute), Rainfall: 0},
-					{Time: baseTime.Add(20 * time.Minute), Rainfall: 0},
-				},
-			},
-			Stop: &domain.Event{Time: baseTime.Add(10 * time.Minute), Rainfall: 0},
+			Forecasts: makeEvents(0, 0, 1),
+			Stop:      &domain.Event{Time: baseTime},
 		}, {
-			Weather: domain.Weather{
-				Forecasts: []domain.Event{
-					{Time: baseTime.Add(0 * time.Minute), Rainfall: 0},
-					{Time: baseTime.Add(10 * time.Minute), Rainfall: 1},
-					{Time: baseTime.Add(20 * time.Minute), Rainfall: 0},
-				},
-			},
-			Stop: &domain.Event{Time: baseTime.Add(0 * time.Minute), Rainfall: 0},
+			Forecasts: makeEvents(0, 1, 0),
+			Stop:      &domain.Event{Time: baseTime},
 		}, {
-			Weather: domain.Weather{
-				Forecasts: []domain.Event{
-					{Time: baseTime.Add(0 * time.Minute), Rainfall: 1},
-					{Time: baseTime.Add(10 * time.Minute), Rainfall: 1},
-					{Time: baseTime.Add(20 * time.Minute), Rainfall: 0},
-				},
-			},
-			Stop: &domain.Event{Time: baseTime.Add(20 * time.Minute), Rainfall: 0},
+			Forecasts: makeEvents(0, 1, 1),
+			Stop:      &domain.Event{Time: baseTime},
 		}, {
-			Weather: domain.Weather{
-				Forecasts: []domain.Event{
-					{Time: baseTime.Add(0 * time.Minute), Rainfall: 1},
-					{Time: baseTime.Add(10 * time.Minute), Rainfall: 1},
-					{Time: baseTime.Add(20 * time.Minute), Rainfall: 1},
-				},
-			},
-			Stop: nil,
+			Forecasts: makeEvents(1, 1, 1),
+		}, {
+			Forecasts: makeEvents(1, 1, 0),
+			Stop:      &domain.Event{Time: baseTime.Add(20 * time.Minute)},
+		}, {
+			Forecasts: makeEvents(1, 0, 1),
+			Stop:      &domain.Event{Time: baseTime.Add(10 * time.Minute)},
+		}, {
+			Forecasts: makeEvents(1, 0, 0),
+			Stop:      &domain.Event{Time: baseTime.Add(10 * time.Minute)},
 		},
 	} {
 		t.Run(fmt.Sprintf("%v", i), func(t *testing.T) {
-			actual := c.Weather.FindRainStops()
+			w := domain.Weather{Forecasts: c.Forecasts}
+			actual := w.FindRainStops()
 			if diff := deep.Equal(c.Stop, actual); diff != nil {
 				t.Error(diff)
 			}
