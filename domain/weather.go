@@ -29,21 +29,31 @@ func (w Weather) IsRainingNow() bool {
 	return w.Observations[len(w.Observations)-1].Rainfall > 0
 }
 
-// FindRainStarts returns the first positive event or nil.
+// FindRainStarts returns the first event which it and next are non-zero.
 func (w Weather) FindRainStarts() *Event {
-	for _, event := range w.Forecasts {
-		if event.Rainfall > 0 {
-			return &event
+	if len(w.Forecasts) < 2 {
+		return nil // forecasts should have 2 or more
+	}
+	for i := 0; i < len(w.Forecasts)-1; i++ {
+		f0 := w.Forecasts[i]
+		f1 := w.Forecasts[i+1]
+		if f0.Rainfall > 0 && f1.Rainfall > 0 {
+			return &w.Forecasts[i]
 		}
 	}
 	return nil
 }
 
-// FindRainStops returns the first zero event or nil.
+// FindRainStops returns the first event which it and next are zero.
 func (w Weather) FindRainStops() *Event {
-	for _, event := range w.Forecasts {
-		if event.Rainfall == 0 {
-			return &event
+	if len(w.Forecasts) < 2 {
+		return nil // forecasts should have 2 or more
+	}
+	for i := 0; i < len(w.Forecasts)-1; i++ {
+		f0 := w.Forecasts[i]
+		f1 := w.Forecasts[i+1]
+		if f0.Rainfall == 0 && f1.Rainfall == 0 {
+			return &w.Forecasts[i]
 		}
 	}
 	return nil

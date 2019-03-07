@@ -58,10 +58,8 @@ func TestWeather_FindRainStarts(t *testing.T) {
 			Forecasts: makeEvents(0, 0, 0),
 		}, {
 			Forecasts: makeEvents(0, 0, 1),
-			Start:     &domain.Event{Time: baseTime.Add(20 * time.Minute), Rainfall: 1},
 		}, {
 			Forecasts: makeEvents(0, 1, 0),
-			Start:     &domain.Event{Time: baseTime.Add(10 * time.Minute), Rainfall: 1},
 		}, {
 			Forecasts: makeEvents(0, 1, 1),
 			Start:     &domain.Event{Time: baseTime.Add(10 * time.Minute), Rainfall: 1},
@@ -73,10 +71,8 @@ func TestWeather_FindRainStarts(t *testing.T) {
 			Start:     &domain.Event{Time: baseTime, Rainfall: 1},
 		}, {
 			Forecasts: makeEvents(1, 0, 1),
-			Start:     &domain.Event{Time: baseTime, Rainfall: 1},
 		}, {
 			Forecasts: makeEvents(1, 0, 0),
-			Start:     &domain.Event{Time: baseTime, Rainfall: 1},
 		},
 	} {
 		t.Run(fmt.Sprintf("%v", i), func(t *testing.T) {
@@ -102,18 +98,14 @@ func TestWeather_FindRainStops(t *testing.T) {
 			Stop:      &domain.Event{Time: baseTime},
 		}, {
 			Forecasts: makeEvents(0, 1, 0),
-			Stop:      &domain.Event{Time: baseTime},
 		}, {
 			Forecasts: makeEvents(0, 1, 1),
-			Stop:      &domain.Event{Time: baseTime},
 		}, {
 			Forecasts: makeEvents(1, 1, 1),
 		}, {
 			Forecasts: makeEvents(1, 1, 0),
-			Stop:      &domain.Event{Time: baseTime.Add(20 * time.Minute)},
 		}, {
 			Forecasts: makeEvents(1, 0, 1),
-			Stop:      &domain.Event{Time: baseTime.Add(10 * time.Minute)},
 		}, {
 			Forecasts: makeEvents(1, 0, 0),
 			Stop:      &domain.Event{Time: baseTime.Add(10 * time.Minute)},
