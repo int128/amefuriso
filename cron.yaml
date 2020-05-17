@@ -1,8 +1,8 @@
-cron:
-  - description:
-    url: /internal/poll-weather
-    schedule: every 5 minutes
-
-  - description:
-    url: /internal/cleanup-images
-    schedule: every 24 hours
+# cron:
+#   - description:
+#     url: /internal/poll-weather
+#     schedule: every 5 minutes
+#
+#   - description:
+#     url: /internal/cleanup-images
+#     schedule: every 24 hours
